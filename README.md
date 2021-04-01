@@ -1,3 +1,3 @@
-# PVT-Grupp-73-BackEnd
+# PVT-Grupp73-Backend
 Spring Framework is used
 https://spring.io/
