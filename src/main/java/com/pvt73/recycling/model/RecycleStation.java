@@ -9,13 +9,14 @@ public class RecycleStation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
     private Integer id;
 
-    private String locationName;
-    private Double lat;
-    private Double lng;
+    private String name;
     private String area;
+
+    private Double latitude;
+    private Double longitude;
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> sorting = new ArrayList<>();
@@ -24,10 +25,10 @@ public class RecycleStation {
     public RecycleStation() {
     }
 
-    public RecycleStation(String locationName, Double lat, Double lng, String area, List<String> sorting) {
-        this.locationName = locationName;
-        this.lat = lat;
-        this.lng = lng;
+    public RecycleStation(String name, Double latitude, Double longitude, String area, List<String> sorting) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.area = area;
         this.sorting = sorting;
     }
@@ -40,28 +41,28 @@ public class RecycleStation {
         this.id = id;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public String getName() {
+        return name;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setName(String locationName) {
+        this.name = locationName;
     }
 
-    public Double getLat() {
-        return lat;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(Double lat) {
-        this.lat = lat;
+    public void setLatitude(Double lat) {
+        this.latitude = lat;
     }
 
-    public Double getLng() {
-        return lng;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLng(Double lng) {
-        this.lng = lng;
+    public void setLongitude(Double lng) {
+        this.longitude = lng;
     }
 
     public String getArea() {

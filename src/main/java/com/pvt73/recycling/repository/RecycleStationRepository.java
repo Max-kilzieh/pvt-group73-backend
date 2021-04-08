@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface RecycleStationRepository extends CrudRepository<RecycleStation, Integer> {
 
 
+
 }
