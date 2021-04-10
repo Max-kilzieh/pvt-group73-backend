@@ -12,7 +12,7 @@
     <artifactId>recycling</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>recycling</name>
-    <description>Demo project for Spring Boot</description>
+    <description>PVT group 73</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -42,6 +42,26 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.google.maps/google-maps-services &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.google.maps</groupId>-->
+<!--            <artifactId>google-maps-services</artifactId>-->
+<!--            <version>0.18.0</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>slf4j-simple</artifactId>-->
+<!--            <version>1.7.30</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.sgr/s2-geometry-library-java &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.sgr</groupId>-->
+<!--            <artifactId>s2-geometry-library-java</artifactId>-->
+<!--            <version>1.0.1</version>-->
+<!--        </dependency>-->
+
 
 
     </dependencies>

@@ -8,15 +8,13 @@ import java.util.List;
 public class RecycleStation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Integer id;
 
     private String name;
     private String area;
-
-    private Double latitude;
-    private Double longitude;
-
+    private double latitude;
+    private double longitude;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> sorting = new ArrayList<>();
@@ -25,11 +23,11 @@ public class RecycleStation {
     public RecycleStation() {
     }
 
-    public RecycleStation(String name, Double latitude, Double longitude, String area, List<String> sorting) {
+    public RecycleStation(String name, double latitude, double longitude, String area, List<String> sorting) {
         this.name = name;
+        this.area = area;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.area = area;
         this.sorting = sorting;
     }
 
@@ -37,48 +35,23 @@ public class RecycleStation {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String locationName) {
-        this.name = locationName;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double lat) {
-        this.latitude = lat;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double lng) {
-        this.longitude = lng;
     }
 
     public String getArea() {
         return area;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
     }
 
     public List<String> getSorting() {
         return sorting;
     }
-
-    public void setSorting(List<String> sorting) {
-        this.sorting = sorting;
-    }
-
 }
