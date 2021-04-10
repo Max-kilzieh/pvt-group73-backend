@@ -3,20 +3,19 @@ package com.pvt73.recycling.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class WasteBin {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Integer id;
 
-    private Double latitude;
+    private double latitude;
+    private double longitude;
 
-    private Double longitude;
-
-    public WasteBin(Double latitude, Double longitude) {
+    public WasteBin(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -28,23 +27,12 @@ public class WasteBin {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
 }

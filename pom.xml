@@ -12,7 +12,7 @@
     <artifactId>recycling</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>recycling</name>
-    <description>Demo project for Spring Boot</description>
+    <description>PVT group 73</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -42,8 +42,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -51,6 +49,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
             </plugin>
         </plugins>
     </build>
