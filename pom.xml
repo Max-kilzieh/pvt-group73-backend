@@ -49,11 +49,8 @@
                     <groupId>org.junit.vintage</groupId>
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
-
             </exclusions>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -65,14 +62,12 @@
                 <version>0.2.5</version>
             </extension>
         </extensions>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-
     </build>
 
     <repositories>
