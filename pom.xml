@@ -79,7 +79,7 @@
         <repository>
             <id>internal.repo</id>
             <name>Internal repo</name>
-            <url>git@github.com:Max-kilzieh/pvt-group73-backend.git</url>
+            <url>git@github.com/Max-kilzieh/pvt-group73-backend.git</url>
         </repository>
     </distributionManagement>
 
