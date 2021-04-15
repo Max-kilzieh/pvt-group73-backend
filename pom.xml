@@ -45,11 +45,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>net.trajano.wagon</groupId>-->
-        <!--            <artifactId>wagon-git</artifactId>-->
-        <!--            <version>2.0.4</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>net.trajano.wagon</groupId>
+            <artifactId>wagon-git</artifactId>
+            <version>2.0.4</version>
+        </dependency>
 
     </dependencies>
 
@@ -67,10 +67,10 @@
             <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
         </pluginRepository>
-        <!--        <pluginRepository>-->
-        <!--            <id>synergian-repo</id>-->
-        <!--            <url>https://raw.github.com/synergian/wagon-git/releases</url>-->
-        <!--        </pluginRepository>-->
+        <pluginRepository>
+            <id>synergian-repo</id>
+            <url>https://raw.github.com/synergian/wagon-git/releases</url>
+        </pluginRepository>
     </pluginRepositories>
     <distributionManagement>
         <repository>
