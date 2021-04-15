@@ -45,12 +45,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.2.0</version>
-        </dependency>
 
 
     </dependencies>
@@ -71,14 +65,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
     </build>
 
     <repositories>
@@ -87,7 +74,6 @@
             <url>https://repo.spring.io/libs-release</url>
         </repository>
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>spring-releases</id>
