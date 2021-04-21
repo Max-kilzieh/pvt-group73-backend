@@ -1,4 +1,4 @@
-package com.pvt73.recycling.integrationTest;
+package com.pvt73.recycling;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
