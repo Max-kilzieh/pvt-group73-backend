@@ -1,5 +1,6 @@
-package com.pvt73.recycling.model;
+package com.pvt73.recycling.model.service;
 
+import com.pvt73.recycling.model.dao.WasteBin;
 import com.pvt73.recycling.repository.WasteBinRepository;
 import org.springframework.stereotype.Service;
 

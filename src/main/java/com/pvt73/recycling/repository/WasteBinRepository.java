@@ -1,6 +1,6 @@
 package com.pvt73.recycling.repository;
 
-import com.pvt73.recycling.model.WasteBin;
+import com.pvt73.recycling.model.dao.WasteBin;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

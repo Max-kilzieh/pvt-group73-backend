@@ -1,4 +1,4 @@
-package com.pvt73.recycling.model;
+package com.pvt73.recycling.model.dao;
 
 import javax.persistence.*;
 import java.util.ArrayList;

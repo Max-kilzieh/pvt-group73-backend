@@ -1,7 +1,7 @@
 package com.pvt73.recycling.controller;
 
-import com.pvt73.recycling.model.WasteBin;
-import com.pvt73.recycling.model.WasteBinService;
+import com.pvt73.recycling.model.dao.WasteBin;
+import com.pvt73.recycling.model.service.WasteBinService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
