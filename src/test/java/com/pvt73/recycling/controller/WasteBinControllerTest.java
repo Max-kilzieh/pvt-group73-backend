@@ -56,7 +56,7 @@ class WasteBinControllerTest {
 
 
     @Test
-    void getNearestWasteBinsWithinHundredMeterDistance() throws Exception {
+    void getNearestWasteBinsWithDefaultDistance() throws Exception {
 
         given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566,100))
                 .willReturn(wasteBinList);
