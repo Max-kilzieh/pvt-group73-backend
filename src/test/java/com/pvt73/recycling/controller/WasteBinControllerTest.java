@@ -21,6 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(WasteBinController.class)
 class WasteBinControllerTest {
+    private final WasteBin one = new WasteBin(59.40318507, 17.94220251);
+    private final WasteBin two = new WasteBin(59.40321616, 17.94232856);
+    private final WasteBin three = new WasteBin(59.40319188, 17.94250775);
+
+    //waste bins within 20 meter from Kista train station.
+    private final List<WasteBin> wasteBinList = Arrays.asList(one, two, three);
+
 
     @Autowired
     private MockMvc mvc;
@@ -30,31 +37,42 @@ class WasteBinControllerTest {
 
     @Test
     public void getNearestWasteBinsWithinDistance() throws Exception {
-        WasteBin oneWithinTwentyMeterFRomKistaTrainStation = new WasteBin(59.30321616, 17.94232856);
-        WasteBin twoWithinTwentyMeterFRomKistaTrainStation = new WasteBin(59.30321616, 17.94232856);
-        WasteBin threeWithinTwentyMeterFRomKistaTrainStation = new WasteBin(59.30321616, 17.94232856);
-
-        List<WasteBin> wasteBinList = Arrays.asList(oneWithinTwentyMeterFRomKistaTrainStation,
-                twoWithinTwentyMeterFRomKistaTrainStation,
-                threeWithinTwentyMeterFRomKistaTrainStation);
 
         given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566, 20))
                 .willReturn(wasteBinList);
 
-        mvc.perform(get("/waste_bins/nearest_waste_bins_within_distance?latitude=59.40332696500667&longitude=17.942350268367566&distance=20")
+        mvc.perform(get("/waste_bins/nearest_waste_bins?latitude=59.40332696500667&longitude=17.942350268367566&distance=20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].latitude", is(oneWithinTwentyMeterFRomKistaTrainStation.getLatitude())))
-                .andExpect(jsonPath("$[0].longitude", is(oneWithinTwentyMeterFRomKistaTrainStation.getLongitude())))
-                .andExpect(jsonPath("$[1].latitude", is(twoWithinTwentyMeterFRomKistaTrainStation.getLatitude())))
-                .andExpect(jsonPath("$[1].longitude", is(twoWithinTwentyMeterFRomKistaTrainStation.getLongitude())))
-                .andExpect(jsonPath("$[2].latitude", is(threeWithinTwentyMeterFRomKistaTrainStation.getLatitude())))
-                .andExpect(jsonPath("$[2].longitude", is(threeWithinTwentyMeterFRomKistaTrainStation.getLongitude())));
+                .andExpect(jsonPath("$[0].latitude", is(59.40318507)))
+                .andExpect(jsonPath("$[0].longitude", is(17.94220251)))
+                .andExpect(jsonPath("$[1].latitude", is(59.40321616)))
+                .andExpect(jsonPath("$[1].longitude", is(17.94232856)))
+                .andExpect(jsonPath("$[2].latitude", is(59.40319188)))
+                .andExpect(jsonPath("$[2].longitude", is(17.94250775)));
     }
 
+
+
     @Test
-    void getNearestWasteBins() {
+    void getNearestWasteBinsWithinHundredMeterDistance() throws Exception {
+
+        given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566,100))
+                .willReturn(wasteBinList);
+
+
+        mvc.perform(get("/waste_bins/nearest_waste_bins?latitude=59.40332696500667&longitude=17.942350268367566")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].latitude", is(59.40318507)))
+                .andExpect(jsonPath("$[0].longitude", is(17.94220251)))
+                .andExpect(jsonPath("$[1].latitude", is(59.40321616)))
+                .andExpect(jsonPath("$[1].longitude", is(17.94232856)))
+                .andExpect(jsonPath("$[2].latitude", is(59.40319188)))
+                .andExpect(jsonPath("$[2].longitude", is(17.94250775)));
+
     }
 
 

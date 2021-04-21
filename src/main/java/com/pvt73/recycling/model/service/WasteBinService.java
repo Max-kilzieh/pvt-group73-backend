@@ -10,15 +10,8 @@ import java.util.List;
 public class WasteBinService {
 
     private final WasteBinRepository wasteBinRepository;
-
-
     public WasteBinService(WasteBinRepository wasteBinRepository) {
         this.wasteBinRepository = wasteBinRepository;
-    }
-
-    public List<WasteBin> getNearestWasteBins(double latitude, double longitude) {
-        int DEFAULT_DISTANCE_IN_METER = 100;
-        return getWasteBins(latitude, longitude, DEFAULT_DISTANCE_IN_METER);
     }
 
     public List<WasteBin> getNearestWasteBinsWithinDistance(double latitude, double longitude, int distansInMeter) {

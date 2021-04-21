@@ -18,16 +18,9 @@ public class WasteBinController {
     }
 
     @GetMapping("/waste_bins/nearest_waste_bins")
-    public List<WasteBin> getNearestWasteBins(@RequestParam double latitude,
-                                              @RequestParam double longitude) {
-
-        return wasteBinService.getNearestWasteBins(latitude, longitude);
-    }
-
-    @GetMapping("/waste_bins/nearest_waste_bins_within_distance")
     public List<WasteBin> getNearestWasteBinsWithinDistance(@RequestParam double latitude,
                                                             @RequestParam double longitude,
-                                                            @RequestParam int distance) {
+                                                            @RequestParam(required = false, defaultValue = "100") int distance) {
 
         return wasteBinService.getNearestWasteBinsWithinDistance(latitude, longitude, distance);
     }
