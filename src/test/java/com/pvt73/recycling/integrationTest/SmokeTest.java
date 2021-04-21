@@ -1,4 +1,4 @@
-package com.pvt73.recycling;
+package com.pvt73.recycling.integrationTest;
 
 import com.pvt73.recycling.controller.WasteBinController;
 import org.junit.jupiter.api.Test;
