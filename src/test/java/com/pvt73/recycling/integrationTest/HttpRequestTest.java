@@ -26,7 +26,7 @@ public class HttpRequestTest {
 
     @Test   //Kista T-bana
     public void wasteBinsWithinTwentyMeterFromKistaTrainStation() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/waste_bins/nearest_waste_bins_within_distance?latitude=59.40332696500667&longitude=17.942350268367566&distance=20",
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/waste_bins/nearest_waste_bins?latitude=59.40332696500667&longitude=17.942350268367566&distance=20",
                 String.class)).isEqualTo("[{\"id\":12271,\"latitude\":59.40318507,\"longitude\":17.94220251},{\"id\":12272,\"latitude\":59.40321616,\"longitude\":17.94232856},{\"id\":12274,\"latitude\":59.40319188,\"longitude\":17.94250775}]");
     }
 }
