@@ -41,7 +41,7 @@ class WasteBinControllerTest {
         given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566, 20))
                 .willReturn(wasteBinList);
 
-        mvc.perform(get("/waste_bins/nearest_waste_bins?latitude=59.40332696500667&longitude=17.942350268367566&distance=20")
+        mvc.perform(get("/waste_bins/nearby?latitude=59.40332696500667&longitude=17.942350268367566&distance=20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -54,15 +54,14 @@ class WasteBinControllerTest {
     }
 
 
-
     @Test
     void getNearestWasteBinsWithDefaultDistance() throws Exception {
 
-        given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566,100))
+        given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566, 100))
                 .willReturn(wasteBinList);
 
 
-        mvc.perform(get("/waste_bins/nearest_waste_bins?latitude=59.40332696500667&longitude=17.942350268367566")
+        mvc.perform(get("/waste_bins/nearby?latitude=59.40332696500667&longitude=17.942350268367566")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -72,7 +71,6 @@ class WasteBinControllerTest {
                 .andExpect(jsonPath("$[1].longitude", is(17.94232856)))
                 .andExpect(jsonPath("$[2].latitude", is(59.40319188)))
                 .andExpect(jsonPath("$[2].longitude", is(17.94250775)));
-
     }
 
 
