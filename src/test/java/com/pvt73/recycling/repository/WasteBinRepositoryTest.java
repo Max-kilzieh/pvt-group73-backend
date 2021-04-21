@@ -2,15 +2,14 @@ package com.pvt73.recycling.repository;
 
 import com.pvt73.recycling.model.dao.WasteBin;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 class WasteBinRepositoryTest {
 
@@ -21,13 +20,13 @@ class WasteBinRepositoryTest {
     private WasteBinRepository wasteBins;
 
     @Test
-     void findWasteBinWithinDistance() {
+    void findWasteBinWithinDistance() {
 
         //waste bin within 15 meter from Kista train station.
         WasteBin wasteBin = new WasteBin(59.40321616, 17.94232856);
         entityManager.persist(wasteBin);
 
-        List<WasteBin> wasteBinsNearby = getWasteBins(59.40332696500667,17.942350268367566,15);
+        List<WasteBin> wasteBinsNearby = getWasteBins(59.40332696500667, 17.942350268367566, 15);
 
         assertThat(wasteBinsNearby).extracting(WasteBin::getLatitude).containsOnly(wasteBin.getLatitude());
         assertThat(wasteBinsNearby).extracting(WasteBin::getLongitude).containsOnly(wasteBin.getLongitude());
