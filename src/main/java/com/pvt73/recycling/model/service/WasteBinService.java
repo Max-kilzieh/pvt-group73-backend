@@ -10,6 +10,7 @@ import java.util.List;
 public class WasteBinService {
 
     private final WasteBinRepository wasteBinRepository;
+
     public WasteBinService(WasteBinRepository wasteBinRepository) {
         this.wasteBinRepository = wasteBinRepository;
     }
@@ -34,6 +35,4 @@ public class WasteBinService {
 
         return wasteBinRepository.findAllByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(latitudeGreaterThan, latitudeLessThan, longitudeGreaterThan, longitudeLessThan);
     }
-
-
 }

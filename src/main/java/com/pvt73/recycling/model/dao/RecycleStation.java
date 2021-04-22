@@ -16,7 +16,7 @@ public class RecycleStation {
     private double latitude;
     private double longitude;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     private List<String> sorting = new ArrayList<>();
 
 
