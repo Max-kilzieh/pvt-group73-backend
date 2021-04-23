@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("test")
+@RequestMapping("t")
 public class ImageController {
 
     private final ImageService imageService;
@@ -22,11 +22,11 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public Image uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
-
-        return imageService.saveImage(image);
-    }
+//    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+//    public Image uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
+//
+//        return imageService.saveImage(image);
+//    }
 
     @GetMapping("/download")
     public ResponseEntity<Resource> download(@RequestParam("name") String name) {
