@@ -22,7 +22,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping(value = "/upload")
+    @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public Image uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
 
         return imageService.saveImage(image);
@@ -42,9 +42,9 @@ public class ImageController {
                 .body(new ByteArrayResource(image.getData()));
     }
 
-    @GetMapping("/delete-all")
-    public void deleteAll() {
-        imageService.deleteAll();
-
-    }
+//    @GetMapping("/delete-all")
+//    public void deleteAll() {
+//        imageService.deleteAll();
+//
+//    }
 }
