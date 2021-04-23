@@ -42,9 +42,13 @@ public class ImageController {
                 .body(new ByteArrayResource(image.getData()));
     }
 
-//    @GetMapping("/delete-all")
-//    public void deleteAll() {
-//        imageService.deleteAll();
-//
-//    }
+    @GetMapping("/delete-all")
+    public void deleteAll() {
+        imageService.deleteAll();
+
+    }
+    @PostMapping("/post")
+    public String postTest(){
+        return "I am working!";
+    }
 }
