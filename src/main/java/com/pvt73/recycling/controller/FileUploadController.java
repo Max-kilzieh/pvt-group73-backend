@@ -1,7 +1,9 @@
 package com.pvt73.recycling.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.pvt73.recycling.model.service.storage.StorageFileNotFoundException;
 import com.pvt73.recycling.model.service.storage.StorageService;
@@ -34,15 +36,21 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-    @GetMapping("/")
-    public String listUploadedFiles(Model model) throws IOException {
-
-        model.addAttribute("files", storageService.loadAll().map(
+    @GetMapping("/all")
+    public Stream<?> listUploadedFiles() throws IOException {
+//    public List<String> listUploadedFiles(Model model) throws IOException {
+        List<String> files =  storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toUri().toString())
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
 
-        return "uploadForm";
+//        model.addAttribute("files", storageService.loadAll().map(
+//                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+//                        "serveFile", path.getFileName().toString()).build().toUri().toString())
+//                .collect(Collectors.toList()));
+
+        return storageService.loadAll();
+//        return "uploadForm";
     }
 
     @GetMapping(value = "/files/{filename:.+}",produces = MediaType.IMAGE_JPEG_VALUE)
@@ -58,6 +66,7 @@ public class FileUploadController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
         System.out.println(file.getContentType());
+
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
@@ -67,6 +76,7 @@ public class FileUploadController {
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+
         return ResponseEntity.notFound().build();
     }
 
