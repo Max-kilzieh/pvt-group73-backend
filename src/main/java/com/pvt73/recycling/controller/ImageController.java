@@ -21,7 +21,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    @PostMapping(value = "/upload")
     public Image uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
 
         return imageService.saveImage(image);
