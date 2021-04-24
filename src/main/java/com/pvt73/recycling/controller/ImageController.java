@@ -45,7 +45,6 @@ public class ImageController {
     @DeleteMapping("/delete-all")
     public void deleteAll() {
         imageService.deleteAll();
-
     }
 
 }
