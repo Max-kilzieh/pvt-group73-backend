@@ -2,10 +2,6 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.service.ImageService.ImageService;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,30 +17,21 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/upload")
-    public String uploadImage(@RequestParam("image") MultipartFile image)  {
 
-//        imageService.saveImage(image)
-        return imageService.uploadFile(image);
+    @PostMapping(value = "/upload", headers = "content-type=multipart/*")
+    public ResponseEntity<Image> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty())
+            return ResponseEntity.badRequest().build();
+
+
+        return ResponseEntity.ok(imageService.uploadImage(1, true, 1.1111, 2.2222, file));
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<Resource> download(@RequestParam("name") String name) {
-        Image image = imageService.getImage(name);
-        if (image == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(image.getImageType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getName() + "\"")
-                .body(new ByteArrayResource(image.getData()));
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam String id) {
+        imageService.delete(id);
     }
 
-    @DeleteMapping("/delete-all")
-    public void deleteAll() {
-        imageService.deleteAll();
-    }
 
 }

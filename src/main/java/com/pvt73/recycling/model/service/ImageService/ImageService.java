@@ -4,12 +4,14 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.repository.ImageRepository;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -23,43 +25,63 @@ public class ImageService {
         this.cloudinary = cloudinary;
     }
 
-    public Image saveImage(MultipartFile file) throws IOException {
-        Image toSave = new Image(true, 11.11111, 22.333333, file.getContentType(), file.getBytes(), file.getOriginalFilename());
-        return service.save(toSave);
-    }
 
-    public Image getImage(String name) {
-
-        return service.findByName(name);
-    }
-
-    public void deleteAll() {
-        service.deleteAll();
-    }
-
-
-    public String uploadFile(MultipartFile image) {
+    public void delete(String id) {
         try {
-            File uploadedFile = convertMultiPartToFile(image);
-            var uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
-            boolean isDeleted = uploadedFile.delete();
+            var result = cloudinary.uploader().destroy(id, ObjectUtils.emptyMap());
+            if (!result.containsValue("ok"))
+                System.err.println("couldn't delete the image at Cloudinary with id: " + id);
 
-            if (isDeleted) {
-                System.out.println("File successfully deleted");
-                System.out.println(uploadResult);
-            } else
-                System.out.println("File doesn't exist");
-            return uploadResult.get("secure_url").toString();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            service.deleteImageById(id);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
+
+    public Image uploadImage(int userId,
+                             boolean isClean,
+                             double latitude,
+                             double longitud,
+                             MultipartFile file) {
+
+        try {
+            File imageToUpload = convertMultipartFileToImage(file);
+            var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
+           if(!imageToUpload.delete())
+               System.err.println("Couldn't delete the temporary image at root");
+
+            //Error key at Cloudinary
+            if (uploadResult.containsKey("name")) {
+                System.err.println(uploadResult);
+                throw new FileUploadException("Image couldn't be uploaded");
+            }
+
+            return service.save(getImage(userId, isClean, latitude, longitud, uploadResult));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+
+        }
+    }
+
+    private Image getImage(int userId, boolean isClean, double latitude, double longitud, Map<?, ?> uploadResult) {
+        return new Image(userId,
+                isClean,
+                latitude, longitud,
+                uploadResult.get("public_id").toString(),
+                uploadResult.get("secure_url").toString());
+    }
+
+    private File convertMultipartFileToImage(MultipartFile image) throws IOException {
+
+        File convImage = new File(Objects.requireNonNull(image.getOriginalFilename()));
+        FileOutputStream fos = new FileOutputStream(convImage);
+        fos.write(image.getBytes());
         fos.close();
-        return convFile;
+
+        return convImage;
     }
 }
