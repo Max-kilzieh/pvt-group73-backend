@@ -49,8 +49,8 @@ public class ImageService {
         try {
             File imageToUpload = convertMultipartFileToImage(file);
             var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
-           if(!imageToUpload.delete())
-               System.err.println("Couldn't delete the temporary image at root");
+            if (!imageToUpload.delete())
+                System.err.println("Couldn't delete the temporary image at root");
 
             //Error key at Cloudinary
             if (uploadResult.containsKey("name")) {

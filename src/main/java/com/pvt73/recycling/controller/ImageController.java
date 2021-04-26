@@ -24,7 +24,6 @@ public class ImageController {
         if (file.isEmpty())
             return ResponseEntity.badRequest().build();
 
-
         return ResponseEntity.ok(imageService.uploadImage(1, true, 1.1111, 2.2222, file));
     }
 
@@ -32,6 +31,4 @@ public class ImageController {
     public void delete(@RequestParam String id) {
         imageService.delete(id);
     }
-
-
 }

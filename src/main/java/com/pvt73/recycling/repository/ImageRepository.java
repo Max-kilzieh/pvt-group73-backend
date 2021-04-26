@@ -7,9 +7,7 @@ import javax.transaction.Transactional;
 
 public interface ImageRepository extends CrudRepository<Image, Integer> {
 
-
     @Transactional
     void deleteImageById(String id);
-
 
 }
