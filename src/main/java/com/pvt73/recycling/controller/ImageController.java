@@ -1,7 +1,7 @@
 package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
-import com.pvt73.recycling.model.service.ImageService;
+import com.pvt73.recycling.model.service.ImageService.ImageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -10,9 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 
-@RestController
+@RestController()
 @RequestMapping("image")
 public class ImageController {
 
@@ -22,10 +21,11 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping(value = "/upload")
-    public Image uploadImage(@RequestParam("image") MultipartFile image) throws IOException {
+    @PostMapping("/upload")
+    public String uploadImage(@RequestParam("image") MultipartFile image)  {
 
-        return imageService.saveImage(image);
+//        imageService.saveImage(image)
+        return imageService.uploadFile(image);
     }
 
     @GetMapping("/download")
