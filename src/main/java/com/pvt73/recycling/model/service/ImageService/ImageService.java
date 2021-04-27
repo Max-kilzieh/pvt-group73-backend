@@ -28,9 +28,11 @@ public class ImageService {
 
     public void delete(String id) {
         try {
-            var result = cloudinary.uploader().destroy(id, ObjectUtils.emptyMap());
-            if (!result.containsValue("ok"))
+            var result = cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
+            if (!result.containsValue("ok")){
                 System.err.println("couldn't delete the image at Cloudinary with id: " + id);
+                System.err.println(result);
+            }
 
             service.deleteImageById(id);
 
@@ -50,10 +52,9 @@ public class ImageService {
             File imageToUpload = convertMultipartFileToImage(file);
             var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
             if (!imageToUpload.delete())
-                System.err.println("Couldn't delete the temporary image at root");
+                System.err.println("Couldn't delete the temporary image at root (/)");
 
-            //Error key at Cloudinary
-            if (uploadResult.containsKey("name")) {
+            if (uploadResult.containsValue("Error")) {
                 System.err.println(uploadResult);
                 throw new FileUploadException("Image couldn't be uploaded");
             }
