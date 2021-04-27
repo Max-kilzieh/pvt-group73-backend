@@ -2,6 +2,7 @@ package com.pvt73.recycling.model.service.ImageService;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.pvt73.recycling.RecyclingApplication;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.repository.ImageRepository;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -29,6 +30,7 @@ public class ImageService {
     public void delete(String id) {
         try {
             var result = cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
+
             if (!result.containsValue("ok")){
                 System.err.println("couldn't delete the image at Cloudinary with id: " + id);
                 System.err.println(result);
