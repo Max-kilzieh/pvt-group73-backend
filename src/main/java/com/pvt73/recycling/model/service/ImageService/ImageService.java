@@ -64,7 +64,6 @@ public class ImageService {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException();
-
         }
     }
 
