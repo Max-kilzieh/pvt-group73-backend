@@ -21,14 +21,17 @@ public class ImageController {
     @PostMapping(value = "/upload", headers = "content-type=multipart/*")
     public ResponseEntity<Image> uploadImage(@RequestParam("file") MultipartFile file) {
 
-        if (file.isEmpty())
+        if (!imageService.isImage(file))
             return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok(imageService.uploadImage(1, true, 1.1111, 2.2222, file));
+        Image image = imageService.uploadImage(1, true, 1.1111, 2.2222, file);
+
+        return ResponseEntity.ok(image);
     }
 
     @DeleteMapping("/delete")
     public void delete(@RequestParam String id) {
+
         imageService.delete(id);
     }
 }

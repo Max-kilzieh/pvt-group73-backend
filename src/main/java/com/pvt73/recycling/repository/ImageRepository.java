@@ -3,11 +3,8 @@ package com.pvt73.recycling.repository;
 import com.pvt73.recycling.model.dao.Image;
 import org.springframework.data.repository.CrudRepository;
 
-import javax.transaction.Transactional;
 
-public interface ImageRepository extends CrudRepository<Image, Integer> {
+public interface ImageRepository extends CrudRepository<Image, String> {
 
-    @Transactional
-    void deleteImageById(String id);
 
 }

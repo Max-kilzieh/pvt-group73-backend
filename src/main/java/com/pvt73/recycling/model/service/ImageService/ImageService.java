@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -17,31 +18,39 @@ import java.util.Objects;
 @Service
 public class ImageService {
 
-    private final ImageRepository service;
+    private final ImageRepository repository;
     private final Cloudinary cloudinary;
 
-    public ImageService(ImageRepository service, Cloudinary cloudinary) {
-        this.service = service;
+    public ImageService(ImageRepository repository, Cloudinary cloudinary) {
+        this.repository = repository;
         this.cloudinary = cloudinary;
     }
 
 
     public void delete(String id) {
-        try {
-            var result = cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
 
-            if (!result.containsValue("ok")) {
-                System.err.println("couldn't delete the image at Cloudinary with id: " + id);
-                System.err.println(result);
+        try {
+
+            if (repository.existsById(id)) {
+                cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
+                repository.deleteById(id);
+            } else {
+                throw new FileNotFoundException("Image with Id: " + id + " not found!");
             }
 
-            service.deleteImageById(id);
-
         } catch (IOException e) {
+            System.err.println("Couldn't delete the image with Id: " + id);
             e.printStackTrace();
         }
     }
 
+    public boolean isImage(MultipartFile file) {
+        return (file != null &&
+                !file.isEmpty() &&
+                file.getContentType() != null &&
+                file.getContentType().startsWith("image/"));
+
+    }
 
     public Image uploadImage(int userId,
                              boolean isClean,
@@ -60,11 +69,11 @@ public class ImageService {
                 throw new FileUploadException("Image couldn't be uploaded");
             }
 
-            return service.save(getImage(userId, isClean, latitude, longitud, uploadResult));
+            return repository.save(getImage(userId, isClean, latitude, longitud, uploadResult));
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("Image couldn't be uploaded");
         }
     }
 
@@ -76,11 +85,14 @@ public class ImageService {
                 uploadResult.get("secure_url").toString());
     }
 
-    private File convertMultipartFileToImage(MultipartFile image) throws IOException {
+    private File convertMultipartFileToImage(MultipartFile file) throws IOException {
 
-        File convImage = new File(Objects.requireNonNull(image.getOriginalFilename()));
+        if (!isImage(file))
+            throw new IllegalArgumentException("Not an Image file!");
+
+        File convImage = new File(Objects.requireNonNull(file.getOriginalFilename()));
         FileOutputStream fos = new FileOutputStream(convImage);
-        fos.write(image.getBytes());
+        fos.write(file.getBytes());
         fos.close();
 
         return convImage;
