@@ -1,7 +1,7 @@
 package com.pvt73.recycling.controller;
 
-import com.pvt73.recycling.model.dao.WasteBin;
-import com.pvt73.recycling.model.service.WasteBinService;
+import com.pvt73.recycling.model.dao.TrashCan;
+import com.pvt73.recycling.model.service.TrashCanService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,29 +19,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(WasteBinController.class)
-class WasteBinControllerTest {
-    private final WasteBin one = new WasteBin(59.40318507, 17.94220251);
-    private final WasteBin two = new WasteBin(59.40321616, 17.94232856);
-    private final WasteBin three = new WasteBin(59.40319188, 17.94250775);
+@WebMvcTest(TrashCanController.class)
+class TrashCanControllerTest {
+    private final TrashCan one = new TrashCan(59.40318507, 17.94220251);
+    private final TrashCan two = new TrashCan(59.40321616, 17.94232856);
+    private final TrashCan three = new TrashCan(59.40319188, 17.94250775);
 
     //waste bins within 20 meter from Kista train station.
-    private final List<WasteBin> wasteBinList = Arrays.asList(one, two, three);
+    private final List<TrashCan> trashCanList = Arrays.asList(one, two, three);
 
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private WasteBinService service;
+    private TrashCanService service;
 
     @Test
     public void getNearestWasteBinsWithinDistance() throws Exception {
 
-        given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566, 20))
-                .willReturn(wasteBinList);
+        given(service.getNearestTrashCansWithinDistance(59.40332696500667, 17.942350268367566, 20))
+                .willReturn(trashCanList);
 
-        mvc.perform(get("/waste_bins/nearby?latitude=59.40332696500667&longitude=17.942350268367566&distance=20")
+        mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566&distance=20")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -57,11 +57,11 @@ class WasteBinControllerTest {
     @Test
     void getNearestWasteBinsWithDefaultDistance() throws Exception {
 
-        given(service.getNearestWasteBinsWithinDistance(59.40332696500667, 17.942350268367566, 100))
-                .willReturn(wasteBinList);
+        given(service.getNearestTrashCansWithinDistance(59.40332696500667, 17.942350268367566, 100))
+                .willReturn(trashCanList);
 
 
-        mvc.perform(get("/waste_bins/nearby?latitude=59.40332696500667&longitude=17.942350268367566")
+        mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))

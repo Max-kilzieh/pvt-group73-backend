@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class WasteBin {
+public class TrashCan {
 
     @Id
     @GeneratedValue
@@ -14,12 +14,12 @@ public class WasteBin {
     private double latitude;
     private double longitude;
 
-    public WasteBin(double latitude, double longitude) {
+    public TrashCan(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public WasteBin() {
+    public TrashCan() {
     }
 
     public Integer getId() {

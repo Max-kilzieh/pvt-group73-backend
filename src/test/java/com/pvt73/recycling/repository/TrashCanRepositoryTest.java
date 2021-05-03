@@ -1,6 +1,6 @@
 package com.pvt73.recycling.repository;
 
-import com.pvt73.recycling.model.dao.WasteBin;
+import com.pvt73.recycling.model.dao.TrashCan;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,28 +11,28 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class WasteBinRepositoryTest {
+class TrashCanRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private WasteBinRepository wasteBins;
+    private TrashCanRepository wasteBins;
 
     @Test
     void findWasteBinWithinDistance() {
 
         //waste bin within 15 meter from Kista train station.
-        WasteBin wasteBin = new WasteBin(59.40321616, 17.94232856);
-        entityManager.persist(wasteBin);
+        TrashCan trashCan = new TrashCan(59.40321616, 17.94232856);
+        entityManager.persist(trashCan);
 
-        List<WasteBin> wasteBinsNearby = getWasteBins(59.40332696500667, 17.942350268367566, 15);
+        List<TrashCan> wasteBinsNearby = getWasteBins(59.40332696500667, 17.942350268367566, 15);
 
-        assertThat(wasteBinsNearby).extracting(WasteBin::getLatitude).containsOnly(wasteBin.getLatitude());
-        assertThat(wasteBinsNearby).extracting(WasteBin::getLongitude).containsOnly(wasteBin.getLongitude());
+        assertThat(wasteBinsNearby).extracting(TrashCan::getLatitude).containsOnly(trashCan.getLatitude());
+        assertThat(wasteBinsNearby).extracting(TrashCan::getLongitude).containsOnly(trashCan.getLongitude());
     }
 
-    private List<WasteBin> getWasteBins(double latitude, double longitude, int distansInMeter) {
+    private List<TrashCan> getWasteBins(double latitude, double longitude, int distansInMeter) {
         double ONE_DEGREE_IN_METER = 111319.5;
         double ONE_METER_IN_DEGREE = 1 / ONE_DEGREE_IN_METER;
 

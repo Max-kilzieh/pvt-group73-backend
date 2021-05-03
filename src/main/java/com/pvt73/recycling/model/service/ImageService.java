@@ -1,4 +1,4 @@
-package com.pvt73.recycling.model.service.ImageService;
+package com.pvt73.recycling.model.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -44,11 +44,11 @@ public class ImageService {
         }
     }
 
-    public boolean isImage(MultipartFile file) {
-        return (file != null &&
-                !file.isEmpty() &&
-                file.getContentType() != null &&
-                file.getContentType().startsWith("image/"));
+    public boolean isNotImage(MultipartFile file) {
+        return (file == null ||
+                file.isEmpty() ||
+                file.getContentType() == null ||
+                !file.getContentType().startsWith("image/"));
 
     }
 
@@ -87,7 +87,7 @@ public class ImageService {
 
     private File convertMultipartFileToImage(MultipartFile file) throws IOException {
 
-        if (!isImage(file))
+        if (isNotImage(file))
             throw new IllegalArgumentException("Not an Image file!");
 
         File convImage = new File(Objects.requireNonNull(file.getOriginalFilename()));
