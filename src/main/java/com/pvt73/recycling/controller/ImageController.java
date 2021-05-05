@@ -2,7 +2,6 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.service.ImageService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,7 +40,7 @@ public class ImageController {
 
 
     public ResponseEntity<Image> uploadImage(@Parameter(description = "Only one image file")
-                                                 @RequestParam MultipartFile file) {
+                                             @RequestParam MultipartFile file) {
 
         if (service.isNotImage(file))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Only image file");
@@ -50,12 +49,13 @@ public class ImageController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImage);
     }
+
     @Operation(summary = "Delete image from cloud")
 
 
     @DeleteMapping("/images/{id}")
     public void delete(@Parameter(description = "The image name is the Id.")
-                           @PathVariable String id) {
+                       @PathVariable String id) {
 
         service.delete(id);
     }

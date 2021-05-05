@@ -7,8 +7,5 @@ import java.util.List;
 
 public interface TrashCanRepository extends CrudRepository<TrashCan, Integer> {
 
-    List<TrashCan> findAllByLatitudeGreaterThanAndLatitudeLessThanAndLongitudeGreaterThanAndLongitudeLessThan(double latitudeGreaterThan,
-                                                                                                              double latitudeLessThan,
-                                                                                                              double longitudeGreaterThan,
-                                                                                                              double longitudeLessThan);
+    List<TrashCan> findAll();
 }
