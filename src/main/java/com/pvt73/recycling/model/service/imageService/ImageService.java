@@ -1,4 +1,4 @@
-package com.pvt73.recycling.model.service;
+package com.pvt73.recycling.model.service.imageService;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

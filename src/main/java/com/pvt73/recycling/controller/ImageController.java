@@ -1,7 +1,7 @@
 package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
-import com.pvt73.recycling.model.service.ImageService;
+import com.pvt73.recycling.model.service.imageService.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 
-@RestController()
+@RestController
 @Tag(name = "Images")
 public class ImageController {
     private final ImageService service;
@@ -34,7 +34,7 @@ public class ImageController {
             @ApiResponse(responseCode = "201", description = "New image created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Image.class))}),
-            @ApiResponse(responseCode = "400", description = "The parameter 'file' is not present.",
+            @ApiResponse(responseCode = "400", description = "One or more parameters missing.",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "415", description = "Wrong file type, only image file! " +
                     "Make sure you are using the right content type; the request body is not empty.",
@@ -54,15 +54,18 @@ public class ImageController {
         if (service.isNotImage(file))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Only image file");
 
+
         Image uploadedImage;
 
         try {
             uploadedImage = service.uploadImage(userId, isClean, latitude, longitud, file);
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Please contact Max");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImage);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(uploadedImage);
     }
 
 
@@ -73,4 +76,6 @@ public class ImageController {
 
         service.delete(id);
     }
+
+
 }
