@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,38 +28,18 @@ public class TrashCanController {
         this.service = service;
     }
 
-//    @Operation(summary = "Trash cans within a distance.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "A list containing trash cans returned",
-//                    content = {@Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = TrashCan.class))}),
-//            @ApiResponse(responseCode = "204",
-//                    description = "No trash cans were found within the given distance.",
-//                    content = @Content)})
-//    @GetMapping(value = "/trash-cans", params = {"latitude", "longitude", "distance"})
-//    public ResponseEntity<List<TrashCan>> getTrashCansWithinDistance(@Parameter(description = "latitude")
-//                                                                     @RequestParam("lat") double latitude,
-//                                                                     @Parameter(description = "longitude")
-//                                                                     @RequestParam("lng") double longitude,
-//                                                                     @Parameter(description = "In meters.")
-//                                                                     @RequestParam int distance) {
-//
-//        List<TrashCan> trashCanList = service.getTrashCansWithinDistance(latitude, longitude, distance);
-//        if (trashCanList.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//
-//        return ResponseEntity.ok(trashCanList);
-//
-//    }
 
+    // ------------------------Documentation----------------------------------------------------------------------------
     @Operation(summary = "Trash cans nearby")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "A list containing trash cans returned",
-                    content = {@Content(mediaType = "application/json",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = TrashCan.class))}),
             @ApiResponse(responseCode = "204",
                     description = "No trash cans nearby were found.",
                     content = @Content)})
+    //------------------------------------------------------------------------------------------------------------------
+
     @GetMapping(value = "/trash-cans")
     public ResponseEntity<List<TrashCan>> getNearbyTrashCans(@Parameter(description = "latitude")
                                                              @RequestParam("lat") double latitude,

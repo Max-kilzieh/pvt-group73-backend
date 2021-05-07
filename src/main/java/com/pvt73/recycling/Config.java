@@ -22,7 +22,7 @@ public class Config {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Keep it clean API")
+                        .title("KeepItClean API")
                         .version("0.1")
                         .description("Group 73")
                         .contact(new Contact().name("Max Kilzieh").email("mkilzieh@gmail.com")));

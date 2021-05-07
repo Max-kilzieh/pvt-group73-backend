@@ -52,29 +52,17 @@ public class ImageService {
 
     }
 
-    public Image uploadImage(int userId,
-                             boolean isClean,
-                             double latitude,
-                             double longitud,
-                             MultipartFile file) {
+    public Image uploadImage(int userId, boolean isClean, double latitude, double longitud, MultipartFile file) throws IOException {
 
-        try {
             File imageToUpload = convertMultipartFileToImage(file);
+
             var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
+
             if (!imageToUpload.delete())
                 System.err.println("Couldn't delete the temporary image at root (/)");
 
-            if (uploadResult.containsValue("Error")) {
-                System.err.println(uploadResult);
-                throw new FileUploadException("Image couldn't be uploaded");
-            }
-
             return repository.save(getImage(userId, isClean, latitude, longitud, uploadResult));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Image couldn't be uploaded");
-        }
     }
 
     private Image getImage(int userId, boolean isClean, double latitude, double longitud, Map<?, ?> uploadResult) {

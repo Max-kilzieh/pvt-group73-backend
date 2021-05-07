@@ -53,5 +53,29 @@ class TrashCanControllerTest {
                 .andExpect(jsonPath("$[2].longitude", is(17.94250775)));
     }
 
+    @Test
+    public void getTrashCansWithPagedAndSorted() throws Exception {
+        given(service.getTrashCansPagedAndSorted(59.40332696500667, 17.942350268367566, 0,3))
+                .willReturn(trashCanList);
+
+        mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566&page=0&size=3")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].latitude", is(59.40318507)))
+                .andExpect(jsonPath("$[0].longitude", is(17.94220251)))
+                .andExpect(jsonPath("$[1].latitude", is(59.40321616)))
+                .andExpect(jsonPath("$[1].longitude", is(17.94232856)))
+                .andExpect(jsonPath("$[2].latitude", is(59.40319188)))
+                .andExpect(jsonPath("$[2].longitude", is(17.94250775)));
+    }
+    @Test
+    public void noContent() throws Exception {
+        mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566&distance=5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+
+    }
 
 }
