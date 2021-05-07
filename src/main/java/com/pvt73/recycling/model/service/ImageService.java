@@ -4,7 +4,6 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.repository.ImageRepository;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,14 +53,14 @@ public class ImageService {
 
     public Image uploadImage(int userId, boolean isClean, double latitude, double longitud, MultipartFile file) throws IOException {
 
-            File imageToUpload = convertMultipartFileToImage(file);
+        File imageToUpload = convertMultipartFileToImage(file);
 
-            var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
+        var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
 
-            if (!imageToUpload.delete())
-                System.err.println("Couldn't delete the temporary image at root (/)");
+        if (!imageToUpload.delete())
+            System.err.println("Couldn't delete the temporary image at root (/)");
 
-            return repository.save(getImage(userId, isClean, latitude, longitud, uploadResult));
+        return repository.save(getImage(userId, isClean, latitude, longitud, uploadResult));
 
     }
 
