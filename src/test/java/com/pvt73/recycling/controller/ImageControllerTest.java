@@ -80,7 +80,7 @@ class ImageControllerTest {
         mvc.perform(multipart("/images").file(textFile).params(parameters))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("500 INTERNAL_SERVER_ERROR \"Please contact Max\"", Objects.requireNonNull(result.getResolvedException()).getMessage()));
+                .andExpect(result -> assertEquals("500 INTERNAL_SERVER_ERROR", Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
     }
 
