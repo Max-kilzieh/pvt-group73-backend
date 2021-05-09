@@ -20,7 +20,8 @@ import java.io.IOException;
 
 
 @RestController
-@Tag(name = "Images")
+@Tag(name = "Images",
+        description = "Handling image compression, upload, download, and conversion to size 1080 width, keeping the aspect ratio.")
 public class ImageController {
     private final ImageService service;
 

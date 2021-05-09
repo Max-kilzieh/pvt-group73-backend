@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Tag(name = "Trash Cans")
+@Tag(name = "Trash Cans",
+        description = "Currently 12538 trash cans within Stockholm County")
 public class TrashCanController {
 
     private final TrashCanService service;
