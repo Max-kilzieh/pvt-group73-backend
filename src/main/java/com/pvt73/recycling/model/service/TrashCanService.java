@@ -36,14 +36,21 @@ public class TrashCanService {
         if (size == 0)
             size = 1;
 
+        // exception!
+
         int from = page * size;
         int to = (page + 1) * size;
 
         if (from < 0)
             from = 0;
 
-        if (to >= repository.count())
-            to = (int) (repository.count() - 1);
+        int maxSize = (int) repository.count();
+
+        if (from > maxSize)
+            from = maxSize;
+
+        if (to > maxSize)
+            to = maxSize;
 
         return new int[]{from, to};
     }

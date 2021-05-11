@@ -8,29 +8,33 @@ public class Image {
 
     @Id
     private String id;
-    private int userId;
-
-
+    private Integer userId;
     private String url;
-
-    private boolean isClean;
+    private boolean clean;
+    private String description;
     private double latitude;
     private double longitude;
 
-    public Image(int userId, boolean isClean, double latitude, double longitude, String id, String url) {
+    public Image(int userId, boolean clean, double latitude, double longitude, String description, String id, String url) {
         this.userId = userId;
-        this.isClean = isClean;
+        this.clean = clean;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.description = description;
         this.id = id;
         this.url = url;
     }
+
 
     public Image() {
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getId() {
@@ -42,7 +46,7 @@ public class Image {
     }
 
     public boolean isClean() {
-        return isClean;
+        return clean;
     }
 
     public double getLatitude() {

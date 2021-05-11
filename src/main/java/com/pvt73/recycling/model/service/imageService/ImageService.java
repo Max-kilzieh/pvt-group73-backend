@@ -51,7 +51,7 @@ public class ImageService {
 
     }
 
-    public Image uploadImage(int userId, boolean isClean, double latitude, double longitud, MultipartFile file) throws IOException {
+    public Image uploadImage(int userId, boolean clean, double latitude, double longitude, String description, MultipartFile file) throws IOException {
 
         File imageToUpload = convertMultipartFileToImage(file);
 
@@ -60,14 +60,15 @@ public class ImageService {
         if (!imageToUpload.delete())
             System.err.println("Couldn't delete the temporary image at root (/)");
 
-        return repository.save(getImage(userId, isClean, latitude, longitud, uploadResult));
+        return repository.save(getImage(userId, clean, latitude, longitude, description, uploadResult));
 
     }
 
-    private Image getImage(int userId, boolean isClean, double latitude, double longitud, Map<?, ?> uploadResult) {
+    private Image getImage(int userId, boolean clean, double latitude, double longitude, String description, Map<?, ?> uploadResult) {
         return new Image(userId,
-                isClean,
-                latitude, longitud,
+                clean,
+                latitude, longitude,
+                description,
                 uploadResult.get("public_id").toString(),
                 uploadResult.get("secure_url").toString());
     }

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ImageController.class)
 class ImageControllerTest {
-    private static final Image image = new Image(0, true, 1.1, 2.2, "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
+    private static final Image image = new Image(0, true, 1.1, 2.2, "desc", "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
     private static final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
 
@@ -45,9 +45,11 @@ class ImageControllerTest {
 
     private static void setParameters() {
         parameters.add("userId", "0");
-        parameters.add("isClean", "true");
+        parameters.add("clean", "true");
         parameters.add("latitude", "1.1");
-        parameters.add("longitud", "2.2");
+        parameters.add("longitude", "2.2");
+        parameters.add("description", "desc");
+
     }
 
     @Test
@@ -55,7 +57,7 @@ class ImageControllerTest {
 
         MockMultipartFile imageFile = new MockMultipartFile("file", "ImageControllerTest.jpg", "image/jpg", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.jpg"));
 
-        given(service.uploadImage(0, true, 1.1, 2.2, imageFile)).willReturn(image);
+        given(service.uploadImage(0, true, 1.1, 2.2, "desc", imageFile)).willReturn(image);
 
 
         mvc.perform(multipart("/images").file(imageFile).params(parameters))
@@ -65,6 +67,7 @@ class ImageControllerTest {
                 .andExpect(jsonPath("url").value("https://res.cloudinary.com/pvt73/image/upload/"))
                 .andExpect(jsonPath("latitude").value("1.1"))
                 .andExpect(jsonPath("longitude").value("2.2"))
+                .andExpect(jsonPath("description").value("desc"))
                 .andExpect(jsonPath("clean").value("true"));
 
     }
@@ -74,13 +77,13 @@ class ImageControllerTest {
 
         MockMultipartFile textFile = new MockMultipartFile("file", "ImageControllerTest.txt", "text/plain", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.txt"));
 
-        given(service.uploadImage(0, true, 1.1, 2.2, textFile)).willThrow(new IOException());
+        given(service.uploadImage(0, true, 1.1, 2.2, "desc", textFile)).willThrow(new IOException());
 
 
         mvc.perform(multipart("/images").file(textFile).params(parameters))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("500 INTERNAL_SERVER_ERROR", Objects.requireNonNull(result.getResolvedException()).getMessage()));
+                .andExpect(result -> assertEquals("500 INTERNAL_SERVER_ERROR \"Server encountered an error\"", Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
     }
 
@@ -94,7 +97,7 @@ class ImageControllerTest {
         mvc.perform(multipart("/images").file(textFile).params(parameters))
                 .andExpect(status().isUnsupportedMediaType())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("415 UNSUPPORTED_MEDIA_TYPE \"Only image file\"", Objects.requireNonNull(result.getResolvedException()).getMessage()));
+                .andExpect(result -> assertEquals("415 UNSUPPORTED_MEDIA_TYPE \"file must not be empty or has another type than an image\"", Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
     }
 
