@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ResponseEntity<RestResponse> handelConstraintValidationException(
+    ResponseEntity<ErrorMessage> handelConstraintValidationException(
             ConstraintViolationException ex, WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String errorMessage = error.getMessage();
             errors.put(fieldName, errorMessage);
         });
-        return RestResponse.builder()
+        return ErrorMessage.builder()
                 .status(BAD_REQUEST)
                 .message(errors)
                 .path(getPath(request))
@@ -82,23 +82,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    private ResponseEntity<RestResponse> handleResponseStatusException(ResponseStatusException ex, WebRequest request) {
-        return RestResponse.builder()
+    private ResponseEntity<ErrorMessage> handleResponseStatusException(ResponseStatusException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .exception(ex)
                 .path(getPath(request))
                 .entity();
     }
 
-    private ResponseEntity<RestResponse> handleStatusException(Exception ex, HttpStatus status, WebRequest request) {
-        return RestResponse.builder()
+    private ResponseEntity<ErrorMessage> handleStatusException(Exception ex, HttpStatus status, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(status)
                 .message("Execution halted")
                 .path(getPath(request))
                 .entity();
     }
 
-    private ResponseEntity<RestResponse> handleEveryException(Exception ex, WebRequest request) {
-        return RestResponse.builder()
+    private ResponseEntity<ErrorMessage> handleEveryException(Exception ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(INTERNAL_SERVER_ERROR)
                 .message("Server encountered an error")
                 .path(getPath(request))
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    private ResponseEntity<RestResponse> methodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    private ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -125,7 +125,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        return RestResponse.builder()
+        return ErrorMessage.builder()
                 .status(BAD_REQUEST)
                 .message(errors)
                 .path(getPath(request))
@@ -141,8 +141,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    private ResponseEntity<RestResponse> missingServletRequestPartException(MissingServletRequestPartException ex, WebRequest request) {
-        return RestResponse.builder()
+    private ResponseEntity<ErrorMessage> missingServletRequestPartException(MissingServletRequestPartException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(BAD_REQUEST)
                 .message(ex.getMessage())
                 .path(getPath(request))
@@ -158,8 +158,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    private ResponseEntity<RestResponse> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
-        return RestResponse.builder()
+    private ResponseEntity<ErrorMessage> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(UNSUPPORTED_MEDIA_TYPE)
                 .message(ex.getMessage())
                 .path(getPath(request))
@@ -175,16 +175,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    private ResponseEntity<RestResponse> httpMessageNotReadableException(HttpMessageNotReadableException ex, HttpStatus status, WebRequest request) {
+    private ResponseEntity<ErrorMessage> httpMessageNotReadableException(HttpMessageNotReadableException ex, HttpStatus status, WebRequest request) {
         String[] linnes = ex.getMostSpecificCause().getMessage().split("\n");
         if (ex.contains(JsonParseException.class)) {
-            return RestResponse.builder()
+            return ErrorMessage.builder()
                     .status(BAD_REQUEST)
                     .message("Invalid json message received")
                     .path(getPath(request))
                     .entity();
         }
-        return RestResponse.builder()
+        return ErrorMessage.builder()
                 .status(status)
                 .message(linnes[0])
                 .path(getPath(request))
@@ -193,8 +193,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    ResponseEntity<RestResponse> handleConstraintViolationException(MethodArgumentTypeMismatchException ex, WebRequest request) {
-        return RestResponse.builder()
+    ResponseEntity<ErrorMessage> handleConstraintViolationException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Wrong parameter type")
                 .path(request.getDescription(false).substring(4))
@@ -209,8 +209,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    ResponseEntity<RestResponse> missingServletRequestParameterException(MissingServletRequestParameterException ex, WebRequest request) {
-        return RestResponse.builder()
+    ResponseEntity<ErrorMessage> missingServletRequestParameterException(MissingServletRequestParameterException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(ex.getMessage())
                 .path(request.getDescription(false).substring(4))
@@ -225,8 +225,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return (ResponseEntity<Object>) responseEntity;
     }
 
-    ResponseEntity<RestResponse> missingPathVariableException(MissingPathVariableException ex, WebRequest request) {
-        return RestResponse.builder()
+    ResponseEntity<ErrorMessage> missingPathVariableException(MissingPathVariableException ex, WebRequest request) {
+        return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(ex.getMessage())
                 .path(request.getDescription(false).substring(4))

@@ -1,6 +1,6 @@
 package com.pvt73.recycling.controller;
 
-import com.pvt73.recycling.exception.RestResponse;
+import com.pvt73.recycling.exception.ErrorMessage;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.service.imageService.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,9 +35,9 @@ public class ImageController {
     @Operation(summary = "Upload image")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New image created"),
-            @ApiResponse(responseCode = "400", description = "One or more parameters are missing or wrong formatted.", content = @Content(schema = @Schema(implementation = RestResponse.class))),
+            @ApiResponse(responseCode = "400", description = "One or more parameters are missing or wrong formatted.", content = @Content(schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "415", description = "Wrong file type, only image file! " +
-                    "Make sure you are using the right content type; the request body is not empty.", content = @Content(schema = @Schema(implementation = RestResponse.class)))})
+                    "Make sure you are using the right content type; the request body is not empty.", content = @Content(schema = @Schema(implementation = ErrorMessage.class)))})
 
 
     @PostMapping(value = "/images",

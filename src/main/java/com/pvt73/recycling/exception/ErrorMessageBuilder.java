@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class RestResponseBuilder {
+public class ErrorMessageBuilder {
 
     private int status;
     private String error;
     private String message;
     private String path;
 
-    public RestResponseBuilder status(int status) {
+    public ErrorMessageBuilder status(int status) {
         this.status = status;
         return this;
     }
 
-    public RestResponseBuilder status(HttpStatus status) {
+    public ErrorMessageBuilder status(HttpStatus status) {
         this.status = status.value();
 
         if (status.isError()) {
@@ -31,12 +31,12 @@ public class RestResponseBuilder {
         return this;
     }
 
-    public RestResponseBuilder error(String error) {
+    public ErrorMessageBuilder error(String error) {
         this.error = error;
         return this;
     }
 
-    public RestResponseBuilder exception(ResponseStatusException exception) {
+    public ErrorMessageBuilder exception(ResponseStatusException exception) {
         HttpStatus status = exception.getStatus();
         this.status = status.value();
 
@@ -52,12 +52,12 @@ public class RestResponseBuilder {
         return this;
     }
 
-    public RestResponseBuilder message(String message) {
+    public ErrorMessageBuilder message(String message) {
         this.message = message;
         return this;
     }
 
-    public RestResponseBuilder message(Map<String, String> message) {
+    public ErrorMessageBuilder message(Map<String, String> message) {
         StringJoiner joiner = new StringJoiner(", ");
 
         message.forEach((field, msg) ->
@@ -67,13 +67,13 @@ public class RestResponseBuilder {
         return this;
     }
 
-    public RestResponseBuilder path(String path) {
+    public ErrorMessageBuilder path(String path) {
         this.path = path;
         return this;
     }
 
-    public RestResponse build() {
-        RestResponse response = new RestResponse();
+    public ErrorMessage build() {
+        ErrorMessage response = new ErrorMessage();
         response.setStatus(status);
         response.setError(error);
         response.setMessage(message);
@@ -81,7 +81,7 @@ public class RestResponseBuilder {
         return response;
     }
 
-    public ResponseEntity<RestResponse> entity() {
+    public ResponseEntity<ErrorMessage> entity() {
         return ResponseEntity.status(status).headers(HttpHeaders.EMPTY).body(build());
     }
 

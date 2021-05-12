@@ -3,7 +3,7 @@ package com.pvt73.recycling.exception;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
-public class RestResponse {
+public class ErrorMessage {
 
     private final LocalDateTime timestamp = LocalDateTime.now();
     private int status;
@@ -11,8 +11,8 @@ public class RestResponse {
     private String message;
     private String path;
 
-    public static RestResponseBuilder builder() {
-        return new RestResponseBuilder();
+    public static ErrorMessageBuilder builder() {
+        return new ErrorMessageBuilder();
     }
 
     public LocalDateTime getTimestamp() {
