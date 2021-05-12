@@ -1,7 +1,7 @@
 package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
-import com.pvt73.recycling.model.service.imageService.ImageService;
+import com.pvt73.recycling.model.service.imageService.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ class ImageControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ImageService service;
+    private ImageServiceImpl service;
 
     @BeforeAll
     static void beforeAll() {

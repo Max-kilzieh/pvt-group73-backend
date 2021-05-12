@@ -10,27 +10,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
-
+@Tag(name = "Images", description = "Handling image compression, upload, download, and conversion to size 1080 pixels width, keeping the aspect ratio.")
+@RequiredArgsConstructor
 @RestController
-@Tag(name = "Images",
-        description = "Handling image compression, upload, download, and conversion to size 1080 pixels width, keeping the aspect ratio.")
-@Validated
 public class ImageController {
     private final ImageService service;
 
-    public ImageController(ImageService service) {
-        this.service = service;
-    }
 
     @Operation(summary = "Upload image")
     @ApiResponses(value = {
