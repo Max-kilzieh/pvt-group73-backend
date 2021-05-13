@@ -1,37 +1,21 @@
 package com.pvt73.recycling.model.dao;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+
+@Getter
+@NoArgsConstructor
 @Entity
 public class TrashCan {
 
-    @Id
-    @GeneratedValue
-    private Integer id;
+    @EmbeddedId
+    private LatLng coordinates;
 
-    private double latitude;
-    private double longitude;
-
-    public TrashCan(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public TrashCan() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
+    public TrashCan(LatLng coordinates) {
+        this.coordinates = coordinates;
     }
 
 }

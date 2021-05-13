@@ -1,5 +1,6 @@
 package com.pvt73.recycling.model.service;
 
+import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.TrashCan;
 import com.pvt73.recycling.repository.TrashCanRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +16,22 @@ public class TrashCanServiceImpl implements TrashCanService {
 
     private final TrashCanRepository repository;
 
+    public List<TrashCan> getNearbyTrashCans(LatLng coordinates, int page, int size, Integer distance) {
 
-    public List<TrashCan> getTrashCansPagedAndSorted(double latitude, double longitude, int page, int size) {
+
+        return distance != null && distance > 0 ?
+                getTrashCansWithinDistance(coordinates, distance) :
+                getTrashCansPagedAndSorted(coordinates, page, size);
+    }
+
+    private List<TrashCan> getTrashCansPagedAndSorted(LatLng coordinates, int page, int size) {
 
 
         List<TrashCan> trashCanList = repository.findAll();
 
         trashCanList.sort(Comparator.comparingDouble(
                 trashCan -> distanceBetweenGpsCoordinates(
-                        latitude, longitude, trashCan.getLatitude(), trashCan.getLongitude())));
+                        coordinates, trashCan.getCoordinates())));
 
         int[] pageAndSize = controlPageAndSize(page, size);
 
@@ -32,16 +40,11 @@ public class TrashCanServiceImpl implements TrashCanService {
     }
 
     private int[] controlPageAndSize(int page, int size) {
-        if (size == 0)
-            size = 1;
-
-        // TODO: exception! ugly shit
+        if (size < 1 || page < 0)
+            throw new IllegalArgumentException();
 
         int from = page * size;
         int to = (page + 1) * size;
-
-        if (from < 0)
-            from = 0;
 
         int maxSize = (int) repository.count();
 
@@ -61,24 +64,22 @@ public class TrashCanServiceImpl implements TrashCanService {
      * It is a special case of a more general formula in spherical trigonometry, the law of haversine,
      * relating the sides and angles of spherical "triangles".
      *
-     * @param lat1 origin latitude
-     * @param lon1 origin longitude
-     * @param lat2 destination latitude
-     * @param lon2 destination longitude
+     * @param origin      origin coordinates
+     * @param destination destination coordinates
      * @return distance in meters
      * @see <a href="https://en.wikipedia.org/wiki/Haversine_formula">Harversine formula</a>
      * @see <a href="https://www.movable-type.co.uk/scripts/latlong.html">Harversine formula implimentation</a>
      */
-    private double distanceBetweenGpsCoordinates(double lat1, double lon1, double lat2, double lon2) {
+    private double distanceBetweenGpsCoordinates(LatLng origin, LatLng destination) {
         final double R = 6378.137; // In kilometers, matching Google Maps API V3 ‘spherical’
 
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
+        double dLat = Math.toRadians(destination.getLatitude() - origin.getLatitude());
+        double dLon = Math.toRadians(destination.getLongitude() - origin.getLongitude());
+        double originLat = Math.toRadians(origin.getLatitude());
+        double destinationLat = Math.toRadians(destination.getLatitude());
 
         // a is the square of half the chord length between the points.
-        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(originLat) * Math.cos(destinationLat);
 
         // c is the angular distance in radians
         double c = 2 * Math.asin(Math.sqrt(a));
@@ -86,14 +87,28 @@ public class TrashCanServiceImpl implements TrashCanService {
         return R * c * 1000.0;
     }
 
-    public List<TrashCan> getTrashCansWithinDistance(double latitude, double longitude, int distansInMeter) {
-        if (distansInMeter < 0)
-            distansInMeter = 1;
-
+    //    private double distanceBetweenGpsCoordinates(LatLng origin, LatLng destination) {
+////    private double distanceBetweenGpsCoordinates(double lat1, double lon1, double lat2, double lon2) {
+//        final double R = 6378.137; // In kilometers, matching Google Maps API V3 ‘spherical’
+//
+//        double dLat = Math.toRadians(lat2 - lat1);
+//        double dLon = Math.toRadians(lon2 - lon1);
+//        lat1 = Math.toRadians(lat1);
+//        lat2 = Math.toRadians(lat2);
+//
+//        // a is the square of half the chord length between the points.
+//        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+//
+//        // c is the angular distance in radians
+//        double c = 2 * Math.asin(Math.sqrt(a));
+//
+//        return R * c * 1000.0;
+//    }
+    private List<TrashCan> getTrashCansWithinDistance(LatLng coordinates, int distansInMeter) {
         List<TrashCan> withinDistance = new ArrayList<>();
         for (TrashCan trashCan : repository.findAll()) {
 
-            double current = distanceBetweenGpsCoordinates(latitude, longitude, trashCan.getLatitude(), trashCan.getLongitude());
+            double current = distanceBetweenGpsCoordinates(coordinates, trashCan.getCoordinates());
             if (current < distansInMeter)
                 withinDistance.add(trashCan);
 

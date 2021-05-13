@@ -3,6 +3,7 @@ package com.pvt73.recycling.model.service.imageService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.pvt73.recycling.model.dao.Image;
+import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -28,16 +28,11 @@ public class ImageServiceImpl implements ImageService {
     public void delete(String id) {
 
         try {
-
-            if (repository.existsById(id)) {
-                cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
-                repository.deleteById(id);
-            } else {
-                throw new FileNotFoundException("Image with Id: " + id + " not found!");
-            }
+            cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
+            repository.deleteById(id);
 
         } catch (IOException e) {
-            System.err.println("Couldn't delete the image with Id: " + id);
+            log.error("Couldn't delete the image with Id: " + id, e);
             e.printStackTrace();
         }
     }
@@ -50,24 +45,29 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public Image uploadImage(int userId, boolean clean, double latitude, double longitude, String description, MultipartFile file) throws IOException {
+    public Image uploadImage(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file) {
+        Map<?, ?> uploadResult = null;
+        try {
 
-        File imageToUpload = convertMultipartFileToImage(file);
+            File imageToUpload = convertMultipartFileToImage(file);
 
-        var uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
+            uploadResult = cloudinary.uploader().upload(imageToUpload, ObjectUtils.emptyMap());
 
-        if (!imageToUpload.delete())
-            log.error("Couldn't delete the temporary image at root (/)");
+            if (!imageToUpload.delete())
+                log.error("Couldn't delete the temporary image at root (/)");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-        return repository.save(getImage(userId, clean, latitude, longitude, description, uploadResult));
-
+        assert uploadResult != null;
+        return repository.save(getImage(userId, clean, coordinates, description, uploadResult));
     }
 
-    private Image getImage(int userId, boolean clean, double latitude, double longitude, String description, Map<?, ?> uploadResult) {
+    private Image getImage(int userId, boolean clean, LatLng coordinates, String description, Map<?, ?> uploadResult) {
         return new Image(userId,
-                clean,
-                latitude, longitude,
+                clean, coordinates,
                 description,
                 uploadResult.get("public_id").toString(),
                 uploadResult.get("secure_url").toString());

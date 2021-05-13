@@ -1,7 +1,8 @@
 package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
-import com.pvt73.recycling.model.service.imageService.ImageServiceImpl;
+import com.pvt73.recycling.model.dao.LatLng;
+import com.pvt73.recycling.model.service.imageService.ImageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ImageController.class)
 class ImageControllerTest {
-    private static final Image image = new Image(0, true, 1.1, 2.2, "desc", "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
+    private static final Image image = new Image(0, true, new LatLng(1.1, 2.2), "desc", "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
     private static final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
 
@@ -36,7 +36,7 @@ class ImageControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ImageServiceImpl service;
+    private ImageService service;
 
     @BeforeAll
     static void beforeAll() {
@@ -57,33 +57,18 @@ class ImageControllerTest {
 
         MockMultipartFile imageFile = new MockMultipartFile("file", "ImageControllerTest.jpg", "image/jpg", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.jpg"));
 
-        given(service.uploadImage(0, true, 1.1, 2.2, "desc", imageFile)).willReturn(image);
+        given(service.uploadImage(0, true, new LatLng(1.1, 2.2), "desc", imageFile)).willReturn(image);
 
 
         mvc.perform(multipart("/images").file(imageFile).params(parameters))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value("imageId"))
+                .andExpect(jsonPath("imageId").value("imageId"))
                 .andExpect(jsonPath("userId").value("0"))
                 .andExpect(jsonPath("url").value("https://res.cloudinary.com/pvt73/image/upload/"))
-                .andExpect(jsonPath("latitude").value("1.1"))
-                .andExpect(jsonPath("longitude").value("2.2"))
+                .andExpect(jsonPath("coordinates.latitude").value("1.1"))
+                .andExpect(jsonPath("coordinates.longitude").value("2.2"))
                 .andExpect(jsonPath("description").value("desc"))
                 .andExpect(jsonPath("clean").value("true"));
-
-    }
-
-    @Test
-    void UploadIOExecution() throws Exception {
-
-        MockMultipartFile textFile = new MockMultipartFile("file", "ImageControllerTest.txt", "text/plain", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.txt"));
-
-        given(service.uploadImage(0, true, 1.1, 2.2, "desc", textFile)).willThrow(new IOException());
-
-
-        mvc.perform(multipart("/images").file(textFile).params(parameters))
-                .andExpect(status().isInternalServerError())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
-                .andExpect(result -> assertEquals("500 INTERNAL_SERVER_ERROR \"Server encountered an error\"", Objects.requireNonNull(result.getResolvedException()).getMessage()));
 
     }
 
@@ -104,6 +89,6 @@ class ImageControllerTest {
     @Test
     void delete() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/images/imageId"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }

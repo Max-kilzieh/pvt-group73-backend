@@ -1,59 +1,32 @@
 package com.pvt73.recycling.model.dao;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class Image {
 
     @Id
-    private String id;
+    private String imageId;
+    private LatLng coordinates;
     private Integer userId;
     private String url;
     private boolean clean;
     private String description;
-    private double latitude;
-    private double longitude;
 
-    public Image(int userId, boolean clean, double latitude, double longitude, String description, String id, String url) {
+
+    public Image(int userId, boolean clean, LatLng coordinates, String description, String imageId, String url) {
         this.userId = userId;
         this.clean = clean;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinates = coordinates;
         this.description = description;
-        this.id = id;
+        this.imageId = imageId;
         this.url = url;
     }
 
-
-    public Image() {
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public boolean isClean() {
-        return clean;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
 }

@@ -3,12 +3,14 @@ package com.pvt73.recycling.exception;
 import com.fasterxml.jackson.core.JsonParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -23,14 +25,30 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.*;
 
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
+
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    ResponseEntity<ErrorMessage> handelEmptyResultDataAccessException(
+            EmptyResultDataAccessException ex, WebRequest request) {
+
+        String error = ex.getMostSpecificCause().getLocalizedMessage();
+        error = error.substring(error.indexOf("dao") + 4);
+
+        return ErrorMessage.builder()
+                .status(NOT_FOUND)
+                .message("No " + error)
+                .path(getPath(request))
+                .entity();
+    }
 
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -40,6 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach(error -> {
             String fieldName = error.getPropertyPath().toString();
+            fieldName = fieldName.substring(fieldName.indexOf('.') + 1);
             String errorMessage = error.getMessage();
             errors.put(fieldName, errorMessage);
         });
@@ -144,7 +163,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ErrorMessage> missingServletRequestPartException(MissingServletRequestPartException ex, WebRequest request) {
         return ErrorMessage.builder()
                 .status(BAD_REQUEST)
-                .message(ex.getMessage())
+                .message(ex.getLocalizedMessage())
                 .path(getPath(request))
                 .entity();
     }
@@ -159,9 +178,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<ErrorMessage> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(ex.getContentType());
+        builder.append(" media type is not supported. Supported media types are ");
+        ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
+
+
         return ErrorMessage.builder()
                 .status(UNSUPPORTED_MEDIA_TYPE)
-                .message(ex.getMessage())
+                .message(builder.substring(0, builder.length() - 2))
                 .path(getPath(request))
                 .entity();
     }
@@ -193,13 +218,41 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    ResponseEntity<ErrorMessage> handleConstraintViolationException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+    ResponseEntity<ErrorMessage> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName();
         return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .message("Wrong parameter type")
+                .message(error)
                 .path(request.getDescription(false).substring(4))
                 .entity();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+
+        ResponseEntity<?> responseEntity = httpRequestMethodNotSupported(ex, request);
+
+        return (ResponseEntity<Object>) responseEntity;
+    }
+
+    private ResponseEntity<ErrorMessage> httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, WebRequest request) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(ex.getMethod());
+        builder.append(" method is not supported for this request. Supported methods are ");
+        Objects.requireNonNull(ex.getSupportedHttpMethods()).forEach(t -> builder.append(t).append(" "));
+
+        return ErrorMessage.builder()
+                .status(METHOD_NOT_ALLOWED)
+                .message(builder.toString())
+                .path(getPath(request))
+                .entity();
+    }
+
 
     @Override
     @SuppressWarnings("unchecked")
@@ -210,9 +263,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     ResponseEntity<ErrorMessage> missingServletRequestParameterException(MissingServletRequestParameterException ex, WebRequest request) {
+        String error = ex.getParameterName() + " parameter is missing";
+
         return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .message(ex.getMessage())
+                .message(error)
                 .path(request.getDescription(false).substring(4))
                 .entity();
     }
@@ -228,7 +283,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ResponseEntity<ErrorMessage> missingPathVariableException(MissingPathVariableException ex, WebRequest request) {
         return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .message(ex.getMessage())
+                .message(ex.getLocalizedMessage())
                 .path(request.getDescription(false).substring(4))
                 .entity();
     }
