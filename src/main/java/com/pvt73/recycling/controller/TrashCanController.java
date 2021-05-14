@@ -34,25 +34,23 @@ public class TrashCanController {
             @ApiResponse(responseCode = "204", description = "No trash cans nearby were found.", content = @Content)})
 
     @GetMapping(value = "/trash-cans")
-    public ResponseEntity<List<TrashCan>> getNearbyTrashCans(@Parameter(description = "latitude")
-                                                             @RequestParam("lat") double latitude,
-                                                             @Parameter(description = "longitude")
-                                                             @RequestParam("lng") double longitude,
-                                                             @Parameter(description = "Trash cans to Skip from the result (page * size)")
-                                                             @RequestParam(defaultValue = "0") @Min(0) int page,
-                                                             @Parameter(description = " Quantity of Trash Cans to return")
-                                                             @RequestParam(defaultValue = "10") @Min(1) int size,
-                                                             @Parameter(description = "In meters; if provided, page and size will be ignored.")
-                                                             @RequestParam(required = false) Integer distance) {
+    ResponseEntity<List<TrashCan>> getNearby(@Parameter(description = "latitude")
+                                             @RequestParam("lat") double latitude,
+                                             @Parameter(description = "longitude")
+                                             @RequestParam("lng") double longitude,
+                                             @Parameter(description = "Trash cans to Skip from the result (page * size)")
+                                             @RequestParam(defaultValue = "0") @Min(0) int page,
+                                             @Parameter(description = " Quantity of Trash Cans to return")
+                                             @RequestParam(defaultValue = "10") @Min(1) int size,
+                                             @Parameter(description = "In meters; if provided, page and size will be ignored.")
+                                             @RequestParam(required = false) Integer distance) {
 
-        List<TrashCan> trashCanList = service.getNearbyTrashCans(new LatLng(latitude, longitude), page, size, distance);
+        List<TrashCan> trashCanList = service.getNearby(new LatLng(latitude, longitude), page, size, distance);
 
         return trashCanList.isEmpty() ?
                 new ResponseEntity<>(HttpStatus.NO_CONTENT) :
                 ResponseEntity.ok(trashCanList);
 
     }
-
-
 }
 

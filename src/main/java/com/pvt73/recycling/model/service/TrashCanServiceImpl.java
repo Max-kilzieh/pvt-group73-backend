@@ -16,21 +16,21 @@ public class TrashCanServiceImpl implements TrashCanService {
 
     private final TrashCanRepository repository;
 
-    public List<TrashCan> getNearbyTrashCans(LatLng coordinates, int page, int size, Integer distance) {
+    public List<TrashCan> getNearby(LatLng coordinates, int page, int size, Integer distance) {
 
 
         return distance != null && distance > 0 ?
-                getTrashCansWithinDistance(coordinates, distance) :
-                getTrashCansPagedAndSorted(coordinates, page, size);
+                getWithinDistance(coordinates, distance) :
+                getPagedAndSorted(coordinates, page, size);
     }
 
-    private List<TrashCan> getTrashCansPagedAndSorted(LatLng coordinates, int page, int size) {
+    private List<TrashCan> getPagedAndSorted(LatLng coordinates, int page, int size) {
 
 
         List<TrashCan> trashCanList = repository.findAll();
 
         trashCanList.sort(Comparator.comparingDouble(
-                trashCan -> distanceBetweenGpsCoordinates(
+                trashCan -> getDistanceBetweenGpsCoordinates(
                         coordinates, trashCan.getCoordinates())));
 
         int[] pageAndSize = controlPageAndSize(page, size);
@@ -70,7 +70,7 @@ public class TrashCanServiceImpl implements TrashCanService {
      * @see <a href="https://en.wikipedia.org/wiki/Haversine_formula">Harversine formula</a>
      * @see <a href="https://www.movable-type.co.uk/scripts/latlong.html">Harversine formula implimentation</a>
      */
-    private double distanceBetweenGpsCoordinates(LatLng origin, LatLng destination) {
+    private double getDistanceBetweenGpsCoordinates(LatLng origin, LatLng destination) {
         final double R = 6378.137; // In kilometers, matching Google Maps API V3 ‘spherical’
 
         double dLat = Math.toRadians(destination.getLatitude() - origin.getLatitude());
@@ -87,28 +87,11 @@ public class TrashCanServiceImpl implements TrashCanService {
         return R * c * 1000.0;
     }
 
-    //    private double distanceBetweenGpsCoordinates(LatLng origin, LatLng destination) {
-////    private double distanceBetweenGpsCoordinates(double lat1, double lon1, double lat2, double lon2) {
-//        final double R = 6378.137; // In kilometers, matching Google Maps API V3 ‘spherical’
-//
-//        double dLat = Math.toRadians(lat2 - lat1);
-//        double dLon = Math.toRadians(lon2 - lon1);
-//        lat1 = Math.toRadians(lat1);
-//        lat2 = Math.toRadians(lat2);
-//
-//        // a is the square of half the chord length between the points.
-//        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
-//
-//        // c is the angular distance in radians
-//        double c = 2 * Math.asin(Math.sqrt(a));
-//
-//        return R * c * 1000.0;
-//    }
-    private List<TrashCan> getTrashCansWithinDistance(LatLng coordinates, int distansInMeter) {
+    private List<TrashCan> getWithinDistance(LatLng coordinates, int distansInMeter) {
         List<TrashCan> withinDistance = new ArrayList<>();
         for (TrashCan trashCan : repository.findAll()) {
 
-            double current = distanceBetweenGpsCoordinates(coordinates, trashCan.getCoordinates());
+            double current = getDistanceBetweenGpsCoordinates(coordinates, trashCan.getCoordinates());
             if (current < distansInMeter)
                 withinDistance.add(trashCan);
 

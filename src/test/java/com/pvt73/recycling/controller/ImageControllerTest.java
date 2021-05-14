@@ -57,7 +57,7 @@ class ImageControllerTest {
 
         MockMultipartFile imageFile = new MockMultipartFile("file", "ImageControllerTest.jpg", "image/jpg", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.jpg"));
 
-        given(service.uploadImage(0, true, new LatLng(1.1, 2.2), "desc", imageFile)).willReturn(image);
+        given(service.creat(0, true, new LatLng(1.1, 2.2), "desc", imageFile)).willReturn(image);
 
 
         mvc.perform(multipart("/images").file(imageFile).params(parameters))

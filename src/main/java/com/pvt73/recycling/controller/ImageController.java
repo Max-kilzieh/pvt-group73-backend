@@ -38,20 +38,19 @@ public class ImageController {
     @PostMapping(value = "/images",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-
-    public ResponseEntity<Image> uploadImage(@RequestParam int userId,
-                                             @RequestParam boolean clean,
-                                             @RequestParam double latitude,
-                                             @RequestParam double longitude,
-                                             @RequestParam(required = false) String description,
-                                             @Parameter(description = "Only one image file")
-                                             @RequestParam MultipartFile file) {
+    ResponseEntity<Image> creat(@RequestParam int userId,
+                                @RequestParam boolean clean,
+                                @RequestParam double latitude,
+                                @RequestParam double longitude,
+                                @RequestParam(required = false) String description,
+                                @Parameter(description = "Only one image file")
+                                @RequestParam MultipartFile file) {
 
 
         if (service.isNotImage(file))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "file must not be empty or has another type than an image");
 
-        Image uploadedImage = service.uploadImage(userId, clean, new LatLng(latitude, longitude), description, file);
+        Image uploadedImage = service.creat(userId, clean, new LatLng(latitude, longitude), description, file);
 
 
         return ResponseEntity.
@@ -66,12 +65,13 @@ public class ImageController {
     @ApiResponse(responseCode = "404", description = "Image not found.", content = @Content(schema = @Schema(implementation = ErrorMessage.class), mediaType = MediaType.APPLICATION_JSON_VALUE))
 
     @DeleteMapping("/images/{id}")
-    public ResponseEntity<Void> delete(@Parameter(description = "The image name is the Id.")
-                                       @PathVariable String id) {
+    ResponseEntity<Void> delete(@Parameter(description = "The image name is the Id.")
+                                @PathVariable String id) {
 
         service.delete(id);
 
         return ResponseEntity.noContent().build();
     }
+
 
 }

@@ -40,7 +40,7 @@ class TrashCanControllerTest {
     public void getTrashCansWithinDistance() throws Exception {
 
 
-        given(service.getNearbyTrashCans(new LatLng(59.40332696500667, 17.942350268367566), 0, 1, 20))
+        given(service.getNearby(new LatLng(59.40332696500667, 17.942350268367566), 0, 1, 20))
                 .willReturn(trashCanList);
 
         mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566&page=0&size=1&distance=20")
@@ -57,7 +57,7 @@ class TrashCanControllerTest {
 
     @Test
     public void getTrashCansWithPagedAndSorted() throws Exception {
-        given(service.getNearbyTrashCans(new LatLng(59.40332696500667, 17.942350268367566), 0, 3, 0))
+        given(service.getNearby(new LatLng(59.40332696500667, 17.942350268367566), 0, 3, 0))
                 .willReturn(trashCanList);
 
         mvc.perform(get("/trash-cans?lat=59.40332696500667&lng=17.942350268367566&page=0&size=3&distance=0")

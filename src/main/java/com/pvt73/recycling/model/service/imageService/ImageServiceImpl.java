@@ -26,6 +26,8 @@ public class ImageServiceImpl implements ImageService {
 
 
     public void delete(String id) {
+        if (id == null)
+            throw new NullPointerException();
 
         try {
             cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
@@ -45,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public Image uploadImage(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file) {
+    public Image creat(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file) {
         Map<?, ?> uploadResult = null;
         try {
 
