@@ -30,7 +30,7 @@ public class ImageController {
     @Operation(summary = "Upload image")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New image created."),
-            @ApiResponse(responseCode = "400", description = "One or more parameters are missing or wrong formatted.", content = @Content(schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "400", description = "parameter is missing or wrong formatted.", content = @Content(schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "415", description = "Wrong file type, only image file! " +
                     "Make sure you are using the right content type; the request body is not empty.", content = @Content(schema = @Schema(implementation = ErrorMessage.class)))})
 
@@ -43,7 +43,6 @@ public class ImageController {
                                 @RequestParam double latitude,
                                 @RequestParam double longitude,
                                 @RequestParam(required = false) String description,
-                                @Parameter(description = "Only one image file")
                                 @RequestParam MultipartFile file) {
 
 
@@ -60,7 +59,6 @@ public class ImageController {
     }
 
 
-    @Operation(summary = "Delete image")
     @ApiResponse(responseCode = "204", description = "No content, Image deleted.")
     @ApiResponse(responseCode = "404", description = "Image not found.", content = @Content(schema = @Schema(implementation = ErrorMessage.class), mediaType = MediaType.APPLICATION_JSON_VALUE))
 

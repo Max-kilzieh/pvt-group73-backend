@@ -3,6 +3,7 @@ package com.pvt73.recycling.model.service;
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.TrashCan;
 import com.pvt73.recycling.repository.TrashCanRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class TrashCanServiceImpl implements TrashCanService {
 
     private final TrashCanRepository repository;
 
-    public List<TrashCan> getNearby(LatLng coordinates, int page, int size, Integer distance) {
+    public List<TrashCan> getNearby(@NonNull LatLng coordinates, int page, int size, Integer distance) {
 
 
         return distance != null && distance > 0 ?

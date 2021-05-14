@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 public class User {
 
     @Id
+    @NotBlank
     private String id;
     private String info;
 

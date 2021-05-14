@@ -35,6 +35,30 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<ErrorMessage> handelResourceNotFoundExecution(
+            ResourceNotFoundException ex, WebRequest request) {
+
+
+        return ErrorMessage.builder()
+                .status(NOT_FOUND)
+                .message(ex.getMessage())
+                .path(getPath(request))
+                .entity();
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    ResponseEntity<ErrorMessage> handelResourceAlreadyExistException(
+            ResourceAlreadyExistException ex, WebRequest request) {
+
+
+        return ErrorMessage.builder()
+                .status(CONFLICT)
+                .message(ex.getMessage())
+                .path(getPath(request))
+                .entity();
+    }
+
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     ResponseEntity<ErrorMessage> handelEmptyResultDataAccessException(
@@ -92,6 +116,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         if (!status.isError()) {
             responseEntity = handleStatusException(ex, status, request);
         } else if (INTERNAL_SERVER_ERROR.equals(status)) {
+            logger.error(ex.getLocalizedMessage(), ex);
             request.setAttribute("javax.servlet.error.exception", ex, 0);
             responseEntity = handleEveryException(ex, request);
         } else {
@@ -219,7 +244,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     ResponseEntity<ErrorMessage> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {
-        String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName();
+
+        String error = ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getSimpleName();
         return ErrorMessage.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(error)

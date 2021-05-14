@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.repository.ImageRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,8 @@ public class ImageServiceImpl implements ImageService {
     private final Cloudinary cloudinary;
 
 
-    public void delete(String id) {
-        if (id == null)
-            throw new NullPointerException();
+    public void delete(@NonNull String id) {
+
 
         try {
             cloudinary.uploader().destroy(id, ObjectUtils.asMap("invalidate", true));
@@ -47,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public Image creat(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file) {
+    public Image creat(int userId, boolean clean, @NonNull LatLng coordinates, String description, @NonNull MultipartFile file) {
         Map<?, ?> uploadResult = null;
         try {
 
