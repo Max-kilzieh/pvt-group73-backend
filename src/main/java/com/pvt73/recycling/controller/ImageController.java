@@ -71,5 +71,13 @@ public class ImageController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiResponse(responseCode = "200", description = "Image found.")
+    @ApiResponse(responseCode = "404", description = "Image not found.", content = @Content(schema = @Schema(implementation = ErrorMessage.class), mediaType = MediaType.APPLICATION_JSON_VALUE))
+
+    @GetMapping(value = "/images/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Image findById(@PathVariable String id) {
+        return service.findById(id);
+    }
+
 
 }

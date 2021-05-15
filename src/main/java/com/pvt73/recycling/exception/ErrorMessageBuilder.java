@@ -5,13 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 public class ErrorMessageBuilder {
-    private final LocalDateTime timestamp = LocalDateTime.now();
 
     private int status;
     private String error;

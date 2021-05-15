@@ -2,6 +2,7 @@ package com.pvt73.recycling.model.service.imageService;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.pvt73.recycling.exception.ResourceNotFoundException;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.repository.ImageRepository;
@@ -37,6 +38,15 @@ public class ImageServiceImpl implements ImageService {
             log.error("Couldn't delete the image with Id: " + id, e);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Image findById(@NonNull String id) {
+
+        return repository.findById(id)
+                .orElseThrow(() -> {
+                    throw new ResourceNotFoundException("id", id, "image not found.");
+                });
     }
 
     public boolean isNotImage(MultipartFile file) {

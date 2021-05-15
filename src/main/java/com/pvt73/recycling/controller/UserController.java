@@ -40,7 +40,7 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     User update(@RequestBody User user, @PathVariable String id) {
         return service.update(user, id);
     }

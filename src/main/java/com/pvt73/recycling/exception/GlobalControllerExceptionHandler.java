@@ -39,7 +39,6 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     ResponseEntity<ErrorMessage> handelResourceNotFoundExecution(
             ResourceNotFoundException ex, WebRequest request) {
 
-
         return ErrorMessage.builder()
                 .status(NOT_FOUND)
                 .message(ex.getMessage())

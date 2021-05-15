@@ -10,4 +10,6 @@ public interface ImageService {
     Image creat(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file);
 
     void delete(String id);
+
+    Image findById(String id);
 }
