@@ -1,4 +1,4 @@
-package com.pvt73.recycling.model.service;
+package com.pvt73.recycling.model.service.TrashCan;
 
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.TrashCan;

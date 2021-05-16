@@ -1,4 +1,4 @@
-package com.pvt73.recycling.model.service;
+package com.pvt73.recycling.model.service.user;
 
 import com.pvt73.recycling.model.dao.User;
 

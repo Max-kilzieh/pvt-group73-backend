@@ -2,7 +2,7 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.exception.ErrorMessage;
 import com.pvt73.recycling.model.dao.User;
-import com.pvt73.recycling.model.service.UserService;
+import com.pvt73.recycling.model.service.user.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

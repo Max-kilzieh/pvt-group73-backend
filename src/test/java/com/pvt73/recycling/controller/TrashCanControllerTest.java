@@ -2,7 +2,7 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.TrashCan;
-import com.pvt73.recycling.model.service.TrashCanService;
+import com.pvt73.recycling.model.service.TrashCan.TrashCanService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

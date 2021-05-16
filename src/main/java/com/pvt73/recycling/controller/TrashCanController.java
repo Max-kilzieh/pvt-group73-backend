@@ -2,7 +2,7 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.TrashCan;
-import com.pvt73.recycling.model.service.TrashCanService;
+import com.pvt73.recycling.model.service.TrashCan.TrashCanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

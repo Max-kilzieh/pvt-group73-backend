@@ -2,7 +2,7 @@ package com.pvt73.recycling.controller;
 
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.dao.LatLng;
-import com.pvt73.recycling.model.service.imageService.ImageService;
+import com.pvt73.recycling.model.service.image.ImageService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
