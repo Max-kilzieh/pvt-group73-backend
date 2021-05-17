@@ -2,17 +2,25 @@ package com.pvt73.recycling.model.dao;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Image {
 
     @Id
     private String imageId;
+
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+
     private LatLng coordinates;
     private Integer userId;
     private String url;

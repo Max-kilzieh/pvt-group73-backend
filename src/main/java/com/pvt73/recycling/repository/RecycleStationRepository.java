@@ -8,5 +8,4 @@ import java.util.List;
 public interface RecycleStationRepository extends CrudRepository<RecycleStation, Integer> {
 
     List<RecycleStation> findAll();
-
 }

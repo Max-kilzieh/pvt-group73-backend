@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     public User creat(@NonNull User newUser) {
 
         if (repository.existsById(newUser.getId()))
-            throw new ResourceAlreadyExistException("user id", newUser.getId(), " user already exist");
+            throw new ResourceAlreadyExistException("user id", newUser.getId(), "user already exist");
 
         return repository.save(newUser);
     }
@@ -35,7 +35,9 @@ public class UserServiceImpl implements UserService {
     public User update(@NonNull User newUser, @NonNull String id) {
         return repository.findById(id)
                 .map(user -> {
+                    user.setName(newUser.getName());
                     user.setInfo(newUser.getInfo());
+
                     return repository.save(user);
                 })
                 .orElseThrow(() -> {
@@ -44,8 +46,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(@NonNull String email) {
+    public void delete(@NonNull String id) {
 
-        repository.deleteById(email);
+        repository.deleteById(id);
     }
 }

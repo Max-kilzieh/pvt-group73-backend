@@ -27,17 +27,16 @@ public class RecycleStationServiceImpl implements RecycleStationService {
     }
 
     private List<RecycleStation> getPagedAndSorted(LatLng coordinates, int page, int size) {
-
         List<RecycleStation> recycleStationList = repository.findAll();
 
         recycleStationList.sort(Comparator.comparingDouble(
-                trashCan -> util.calculateDistanceBetweenGpsCoordinates(
-                        coordinates, trashCan.getCoordinates())));
+                recycleStation -> util.calculateDistanceBetweenGpsCoordinates(
+                        coordinates, recycleStation.getCoordinates())));
+
 
         int[] pageAndSize = util.calculatePageAndSize(page, size, recycleStationList.size());
 
         return recycleStationList.subList(pageAndSize[0], pageAndSize[1]);
-
     }
 
 
@@ -52,6 +51,5 @@ public class RecycleStationServiceImpl implements RecycleStationService {
         }
         return withinDistance;
     }
-
 
 }

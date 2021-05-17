@@ -41,7 +41,7 @@ public class UserController {
 
 
     @PutMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    User update(@RequestBody User user, @PathVariable String id) {
+    User update(@RequestBody @Valid User user, @PathVariable String id) {
         return service.update(user, id);
     }
 
@@ -50,6 +50,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "User not found.", content = @Content(schema = @Schema(implementation = ErrorMessage.class), mediaType = MediaType.APPLICATION_JSON_VALUE))
 
     @DeleteMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
         service.delete(id);
     }
