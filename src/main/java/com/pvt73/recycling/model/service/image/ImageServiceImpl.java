@@ -57,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public Image creat(int userId, boolean clean, @NonNull LatLng coordinates, String description, @NonNull MultipartFile file) {
+    public Image creat(String userId, boolean clean, @NonNull LatLng coordinates, String description, @NonNull MultipartFile file) {
         Map<?, ?> uploadResult = null;
         try {
 
@@ -77,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
         return repository.save(getImage(userId, clean, coordinates, description, uploadResult));
     }
 
-    private Image getImage(int userId, boolean clean, LatLng coordinates, String description, Map<?, ?> uploadResult) {
+    private Image getImage(String userId, boolean clean, LatLng coordinates, String description, Map<?, ?> uploadResult) {
         return new Image(userId,
                 clean, coordinates,
                 description,

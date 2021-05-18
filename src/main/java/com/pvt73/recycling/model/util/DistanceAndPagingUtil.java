@@ -2,9 +2,9 @@ package com.pvt73.recycling.model.util;
 
 import com.pvt73.recycling.model.dao.LatLng;
 import lombok.NonNull;
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
-@Component
+@UtilityClass
 public class DistanceAndPagingUtil {
 
 
@@ -38,20 +38,20 @@ public class DistanceAndPagingUtil {
     }
 
 
-    public int[] calculatePageAndSize(int page, int size, int maxSize) {
+    public int[] calculatePageAndSize(int offset, int limit, int maxOffset) {
 
-        if (page < 0 || size < 1 || maxSize < 1)
+        if (offset < 0 || limit < 1 || maxOffset < 1)
             throw new IllegalArgumentException();
 
-        int from = page * size;
-        int to = (page + 1) * size;
+        int from = offset * limit;
+        int to = (offset + 1) * limit;
 
 
-        if (from > maxSize)
-            from = maxSize;
+        if (from > maxOffset)
+            from = maxOffset;
 
-        if (to > maxSize)
-            to = maxSize;
+        if (to > maxOffset)
+            to = maxOffset;
 
         return new int[]{from, to};
     }

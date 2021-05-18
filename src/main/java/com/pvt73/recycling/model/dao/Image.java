@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,13 +23,14 @@ public class Image {
     private LocalDateTime createdOn;
 
     private LatLng coordinates;
-    private Integer userId;
+    @NotBlank
+    private String userId;
     private String url;
     private boolean clean;
     private String description;
 
 
-    public Image(int userId, boolean clean, LatLng coordinates, String description, String imageId, String url) {
+    public Image(String userId, boolean clean, LatLng coordinates, String description, String imageId, String url) {
         this.userId = userId;
         this.clean = clean;
         this.coordinates = coordinates;

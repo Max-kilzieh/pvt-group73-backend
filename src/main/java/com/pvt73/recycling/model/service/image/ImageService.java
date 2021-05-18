@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
     boolean isNotImage(MultipartFile file);
 
-    Image creat(int userId, boolean clean, LatLng coordinates, String description, MultipartFile file);
+    Image creat(String userId, boolean clean, LatLng coordinates, String description, MultipartFile file);
 
     void delete(String id);
 

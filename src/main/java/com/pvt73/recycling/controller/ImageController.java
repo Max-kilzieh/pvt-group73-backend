@@ -15,13 +15,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
 
 @Tag(name = "Images", description = "Handling image compression, upload, download, conversion to WebP format, and 1080 pixels width, keeping the aspect ratio.")
+@Validated
 @RequiredArgsConstructor
 @RestController
 public class ImageController {
@@ -38,7 +41,7 @@ public class ImageController {
     @PostMapping(value = "/images",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Image> creat(@RequestParam int userId,
+    ResponseEntity<Image> creat(@RequestParam @NotBlank String userId,
                                 @RequestParam boolean clean,
                                 @RequestParam double latitude,
                                 @RequestParam double longitude,

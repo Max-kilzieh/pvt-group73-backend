@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ImageController.class)
 class ImageControllerTest {
-    private static final Image image = new Image(0, true, new LatLng(1.1, 2.2), "desc", "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
+    private static final Image image = new Image("userId", true, new LatLng(1.1, 2.2), "desc", "imageId", "https://res.cloudinary.com/pvt73/image/upload/");
     private static final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
 
@@ -44,7 +44,7 @@ class ImageControllerTest {
     }
 
     private static void setParameters() {
-        parameters.add("userId", "0");
+        parameters.add("userId", "userId");
         parameters.add("clean", "true");
         parameters.add("latitude", "1.1");
         parameters.add("longitude", "2.2");
@@ -57,13 +57,13 @@ class ImageControllerTest {
 
         MockMultipartFile imageFile = new MockMultipartFile("file", "ImageControllerTest.jpg", "image/jpg", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.jpg"));
 
-        given(service.creat(0, true, new LatLng(1.1, 2.2), "desc", imageFile)).willReturn(image);
+        given(service.creat("userId", true, new LatLng(1.1, 2.2), "desc", imageFile)).willReturn(image);
 
 
         mvc.perform(multipart("/images").file(imageFile).params(parameters))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("imageId").value("imageId"))
-                .andExpect(jsonPath("userId").value("0"))
+                .andExpect(jsonPath("userId").value("userId"))
                 .andExpect(jsonPath("url").value("https://res.cloudinary.com/pvt73/image/upload/"))
                 .andExpect(jsonPath("coordinates.latitude").value("1.1"))
                 .andExpect(jsonPath("coordinates.longitude").value("2.2"))
@@ -73,7 +73,7 @@ class ImageControllerTest {
     }
 
     @Test
-    void UploadWrongFileType() throws Exception {
+    void UploadWrongFileTypeAndReturnUnsupportedMediaType() throws Exception {
 
         MockMultipartFile textFile = new MockMultipartFile("file", "ImageControllerTest.txt", "text/plain", new FileInputStream("src/test/java/com/pvt73/recycling/controller/ImageControllerTest.txt"));
 
@@ -87,7 +87,26 @@ class ImageControllerTest {
     }
 
     @Test
-    void delete() throws Exception {
+    void findByIdReturnImage() throws Exception {
+
+
+        given(service.findById(image.getImageId())).willReturn(image);
+
+        mvc.perform(MockMvcRequestBuilders.get("/images/" + image.getImageId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("imageId").value("imageId"))
+                .andExpect(jsonPath("userId").value("userId"))
+                .andExpect(jsonPath("url").value("https://res.cloudinary.com/pvt73/image/upload/"))
+                .andExpect(jsonPath("coordinates.latitude").value("1.1"))
+                .andExpect(jsonPath("coordinates.longitude").value("2.2"))
+                .andExpect(jsonPath("description").value("desc"))
+                .andExpect(jsonPath("clean").value("true"));
+
+    }
+
+
+    @Test
+    void deleteReturnNoContent() throws Exception {
         mvc.perform(MockMvcRequestBuilders.delete("/images/imageId"))
                 .andExpect(status().isNoContent());
     }
