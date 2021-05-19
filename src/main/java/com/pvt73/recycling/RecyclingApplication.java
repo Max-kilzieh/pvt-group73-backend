@@ -9,6 +9,5 @@ public class RecyclingApplication {
         SpringApplication.run(RecyclingApplication.class);
     }
 
-
 }
 

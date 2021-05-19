@@ -17,6 +17,8 @@ public class RecycleStation {
     @EmbeddedId
     private LatLng coordinates;
 
+    private String address;
+
     @Transient
     private double distance;
 

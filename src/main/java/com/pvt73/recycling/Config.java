@@ -1,17 +1,26 @@
-package com.pvt73.recycling.model.service.image;
+package com.pvt73.recycling;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.google.maps.GeoApiContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ImageServiceConfig {
+public class Config {
 
     @Bean
     public Cloudinary cloudinaryApi() {
         return new Cloudinary(ObjectUtils.asMap("cloud_name", "pvt73",
                 "api_key", "528765818657637",
                 "api_secret", "lYOtY0RsH-OdnG4z1kBVcjyfmjs"));
+    }
+
+    @Bean
+    public GeoApiContext googleGeocodingApi() {
+        return new GeoApiContext.Builder()
+                .apiKey("AIzaSyB7qOZSBJKVakHWVwknSHVt8H9dY6ogUA4")
+                .build();
+
     }
 }
