@@ -21,10 +21,11 @@ public class RecycleStationServiceImpl implements RecycleStationService {
     public List<RecycleStation> getNearby(@NonNull LatLng coordinates, int offset, int limit) {
         List<RecycleStation> recycleStationList = repository.findAll();
 
-        recycleStationList.sort(Comparator.comparingDouble(
-                recycleStation -> DistanceAndPagingUtil.calculateDistanceBetweenGpsCoordinates(
+        recycleStationList.forEach(recycleStation -> recycleStation.setDistance(
+                DistanceAndPagingUtil.calculateDistanceBetweenGpsCoordinates(
                         coordinates, recycleStation.getCoordinates())));
 
+        recycleStationList.sort(Comparator.comparingDouble(RecycleStation::getDistance));
 
         int[] pageAndSize = DistanceAndPagingUtil.calculatePageAndSize(offset, limit, recycleStationList.size());
 

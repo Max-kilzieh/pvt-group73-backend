@@ -20,10 +20,11 @@ public class TrashCanServiceImpl implements TrashCanService {
     public List<TrashCan> getNearby(@NonNull LatLng coordinates, int offset, int limit) {
         List<TrashCan> trashCanList = repository.findAll();
 
-        trashCanList.sort(Comparator.comparingDouble(
-                trashCan -> DistanceAndPagingUtil.
-                        calculateDistanceBetweenGpsCoordinates(
-                                coordinates, trashCan.getCoordinates())));
+        trashCanList.forEach(trashCan -> trashCan.setDistance(
+                DistanceAndPagingUtil.calculateDistanceBetweenGpsCoordinates(
+                        coordinates, trashCan.getCoordinates())));
+
+        trashCanList.sort(Comparator.comparingDouble(TrashCan::getDistance));
 
         int[] pageAndSize = DistanceAndPagingUtil.calculatePageAndSize(offset, limit, trashCanList.size());
 
