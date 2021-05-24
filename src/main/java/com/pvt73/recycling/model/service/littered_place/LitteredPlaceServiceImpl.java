@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -80,18 +81,16 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
                 .map(place -> {
                     place.setCoordinates(newPlace.getCoordinates());
                     place.setAddress(newPlace.getAddress());
+
+                    deleteImageSetCompliment(place, newPlace);
                     place.setImageSet(newPlace.getImageSet());
+
                     place.setDescription(newPlace.getDescription());
                     place.setUserId(newPlace.getUserId());
 
-                    if (newPlace.getCleaningStatus() == CleaningStatus.CLEAN && (
-                            newPlace.getCleanedBy() == null || newPlace.getCleanedBy().isBlank())) {
-                        throw new IllegalArgumentException("cleanedBy must be provided");
-                    }
-
+                    checkCleanByExist(newPlace);
                     if (newPlace.getCleaningStatus() == CleaningStatus.CLEAN)
                         place.setCleanedBy(newPlace.getCleanedBy());
-
 
                     place.setCleaningStatus(newPlace.getCleaningStatus());
                     place.setEvent(newPlace.isEvent());
@@ -100,6 +99,19 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
                 .orElseThrow(() -> {
                     throw new ResourceNotFoundException("id", id, "littered place not found.");
                 });
+    }
+
+    private void deleteImageSetCompliment(LitteredPlace place, LitteredPlace newPlace) {
+        Set<Image> toRemove = new HashSet<>(place.getImageSet());
+        toRemove.removeAll(newPlace.getImageSet());
+        imageService.deleteAll(toRemove);
+    }
+
+    private void checkCleanByExist(LitteredPlace newPlace) {
+        if (newPlace.getCleaningStatus() == CleaningStatus.CLEAN && (
+                newPlace.getCleanedBy() == null || newPlace.getCleanedBy().isBlank())) {
+            throw new IllegalArgumentException("cleanedBy must be provided");
+        }
     }
 
     @Override
