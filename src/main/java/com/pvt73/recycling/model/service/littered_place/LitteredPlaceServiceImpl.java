@@ -31,6 +31,7 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
     public LitteredPlace creat(@NonNull LitteredPlace newLitteredPlace) {
         newLitteredPlace.setEvent(false);
         newLitteredPlace.setCleanedBy(null);
+        newLitteredPlace.setCleanedAt(null);
 
         newLitteredPlace.setCleaningStatus(CleaningStatus.NOT_CLEAN);
 

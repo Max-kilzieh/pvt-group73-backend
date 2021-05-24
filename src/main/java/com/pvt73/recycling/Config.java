@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "KeepItClean API",
                 description = "Group 73",
-                version = "0.6",
+                version = "0.8",
                 contact = @Contact(
                         name = "Max Kilzieh",
                         url = "https://github.com/Max-kilzieh",

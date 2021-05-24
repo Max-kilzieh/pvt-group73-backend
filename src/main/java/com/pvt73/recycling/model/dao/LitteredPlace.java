@@ -32,7 +32,6 @@ public class LitteredPlace {
 
     private CleaningStatus cleaningStatus;
 
-    @Setter(AccessLevel.NONE)
     private LocalDateTime cleanedAt;
     private String cleanedBy;
 
