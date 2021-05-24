@@ -118,13 +118,14 @@ public class LitteredPlaceController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Image> addImage(@PathVariable("place-id") int litteredPlaceId,
-                                   @RequestParam MultipartFile file) {
+                                   @RequestParam MultipartFile file,
+                                   @RequestParam boolean clean) {
 
 
         if (service.isNotImage(file))
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "file must not be empty or has another type than an image");
 
-        Image uploadedImage = service.addImage(litteredPlaceId, file);
+        Image uploadedImage = service.addImage(litteredPlaceId, file, clean);
 
         return ResponseEntity.
                 created(URI.create(uploadedImage.getUrl()))

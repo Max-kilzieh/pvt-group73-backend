@@ -21,7 +21,7 @@ public interface LitteredPlaceService {
 
     int countCleanedBy(String userId);
 
-    Image addImage(int litteredPlaceId, MultipartFile file);
+    Image addImage(int litteredPlaceId, MultipartFile file, boolean clean);
 
     void deleteImage(int litteredPlaceId, String imageId);
 

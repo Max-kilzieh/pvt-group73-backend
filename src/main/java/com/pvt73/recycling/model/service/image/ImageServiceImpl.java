@@ -51,7 +51,7 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public Image creat(@NonNull MultipartFile file) {
+    public Image creat(@NonNull MultipartFile file, boolean clean) {
 
         Map<?, ?> uploadResult = null;
         try {
@@ -69,14 +69,14 @@ public class ImageServiceImpl implements ImageService {
 
         assert uploadResult != null;
 
-        return getImage(uploadResult);
+        return getImage(uploadResult, clean);
     }
 
-    private Image getImage(Map<?, ?> uploadResult) {
+    private Image getImage(Map<?, ?> uploadResult, boolean clean) {
         return new Image(
-
                 uploadResult.get("public_id").toString(),
-                uploadResult.get("secure_url").toString());
+                uploadResult.get("secure_url").toString(),
+                clean);
     }
 
     private File convertMultipartFileToImage(MultipartFile file) throws IOException {

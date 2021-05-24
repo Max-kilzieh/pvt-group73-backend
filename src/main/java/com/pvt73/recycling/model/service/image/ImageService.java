@@ -8,7 +8,7 @@ import java.util.Set;
 public interface ImageService {
     boolean isNotImage(MultipartFile file);
 
-    Image creat(MultipartFile file);
+    Image creat(MultipartFile file, boolean clean);
 
     void delete(String imageId);
 

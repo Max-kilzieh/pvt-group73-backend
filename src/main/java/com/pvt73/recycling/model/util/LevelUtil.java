@@ -31,12 +31,10 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class LevelUtil {
 
-    private final int pointPerLevel = 100;
-
     private final int pointPerPlaceCleaned = 25;
-
     private final int pointPerEventParticipated = 50;
 
+    private final int pointPerLevel = 100;
     private final int highestLevel = 10;
 
 

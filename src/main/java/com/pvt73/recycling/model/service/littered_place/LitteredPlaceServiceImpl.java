@@ -115,10 +115,10 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
     }
 
 
-    public Image addImage(int litteredPlaceId, MultipartFile file) {
+    public Image addImage(int litteredPlaceId, MultipartFile file, boolean clean) {
         LitteredPlace litteredPlace = findByID(litteredPlaceId);
         Set<Image> imageSet = litteredPlace.getImageSet();
-        Image image = imageService.creat(file);
+        Image image = imageService.creat(file, clean);
         imageSet.add(image);
 
         litteredPlace.setImageSet(imageSet);

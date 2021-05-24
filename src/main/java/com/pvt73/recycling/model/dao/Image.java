@@ -15,11 +15,13 @@ public class Image {
 
     private String id;
     private String url;
+    private boolean clean;
 
 
-    public Image(String id, String url) {
+    public Image(String id, String url, boolean clean) {
         this.id = id;
         this.url = url;
+        this.clean = clean;
     }
 
 
