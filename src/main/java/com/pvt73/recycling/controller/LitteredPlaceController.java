@@ -43,7 +43,7 @@ public class LitteredPlaceController {
             @ApiResponse(responseCode = "400", description = "parameter is missing or wrong formatted.", content = @Content(schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "409", description = "Littered place already exist.", content = @Content(schema = @Schema(implementation = ErrorMessage.class)))})
 
-    @PostMapping(value = "/littered-places")
+    @PostMapping(value = "/littered-places", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     LitteredPlace creat(@RequestBody @Valid LitteredPlace newLitteredPlace) {
         return service.creat(newLitteredPlace);
