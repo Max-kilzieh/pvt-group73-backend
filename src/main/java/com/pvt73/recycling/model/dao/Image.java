@@ -3,40 +3,48 @@ package com.pvt73.recycling.model.dao;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import javax.persistence.Embeddable;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Embeddable
 public class Image {
 
-    @Id
-    private String imageId;
-
-    @CreationTimestamp
-    private LocalDateTime createdOn;
-
-    private LatLng coordinates;
-    @NotBlank
-    private String userId;
+    private String id;
     private String url;
-    private boolean clean;
-    private String description;
 
 
-    public Image(String userId, boolean clean, LatLng coordinates, String description, String imageId, String url) {
-        this.userId = userId;
-        this.clean = clean;
-        this.coordinates = coordinates;
-        this.description = description;
-        this.imageId = imageId;
+    public Image(String id, String url) {
+        this.id = id;
         this.url = url;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Image)) return false;
+
+        Image image = (Image) o;
+
+        return getId().equals(image.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getUrl() != null ? getUrl().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

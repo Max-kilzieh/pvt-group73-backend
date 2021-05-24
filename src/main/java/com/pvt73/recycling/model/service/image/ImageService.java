@@ -1,15 +1,17 @@
 package com.pvt73.recycling.model.service.image;
 
 import com.pvt73.recycling.model.dao.Image;
-import com.pvt73.recycling.model.dao.LatLng;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Set;
 
 public interface ImageService {
     boolean isNotImage(MultipartFile file);
 
-    Image creat(String userId, boolean clean, LatLng coordinates, String description, MultipartFile file);
+    Image creat(MultipartFile file);
 
-    void delete(String id);
+    void delete(String imageId);
 
-    Image findById(String id);
+    void deleteAll(Set<Image> imageSet);
+
 }

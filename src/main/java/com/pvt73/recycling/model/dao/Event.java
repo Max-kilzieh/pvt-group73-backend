@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @Entity
-public class LitteredPlace {
+public class Event {
 
     @Id
     @GeneratedValue
@@ -29,46 +30,23 @@ public class LitteredPlace {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-
-    private CleaningStatus cleaningStatus;
-
-    @Setter(AccessLevel.NONE)
-    private LocalDateTime cleanedAt;
-    private String cleanedBy;
+    @Future
+    private LocalDateTime eventDateTime;
 
     @Transient
     private double distance;
     private String address;
     private LatLng coordinates;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Image> imageSet = new HashSet<>();
 
-    private boolean event;
+    @Transient
+    private int numberOfParticipant;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> participantSet = new HashSet<>();
+
     private String description;
-
-
-    public LitteredPlace(LatLng coordinates, String userId) {
-        this.coordinates = coordinates;
-        this.userId = userId;
-
-    }
-
-    public boolean containImage(String imageId) {
-        for (Image image : imageSet) {
-            if (image.getId().equals(imageId))
-                return true;
-        }
-        return false;
-    }
-
-    public void setCleaningStatus(CleaningStatus status) {
-        if (status == CleaningStatus.CLEAN)
-            cleanedAt = LocalDateTime.now();
-
-        this.cleaningStatus = status;
-    }
-
 
 }

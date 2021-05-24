@@ -1,6 +1,7 @@
 package com.pvt73.recycling.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,6 +35,7 @@ import static org.springframework.http.HttpStatus.*;
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     ResponseEntity<ErrorMessage> handelResourceNotFoundExecution(
@@ -95,7 +97,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(ResponseStatusException.class)
     ResponseEntity<?> handleStatusException(ResponseStatusException ex, WebRequest request) {
-        logger.error(ex.getReason(), ex);
+        logger.warn(ex.getReason(), ex);
         return handleResponseStatusException(ex, request);
     }
 
@@ -225,21 +227,38 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     }
 
     private ResponseEntity<ErrorMessage> httpMessageNotReadableException(HttpMessageNotReadableException ex, HttpStatus status, WebRequest request) {
-        String[] linnes = ex.getMostSpecificCause().getMessage().split("\n");
+        String[] linnes = ex.getLocalizedMessage().split(";");
+
         if (ex.contains(JsonParseException.class)) {
             return ErrorMessage.builder()
                     .status(BAD_REQUEST)
-                    .message("Invalid json message received")
+                    .message(linnes[0].substring(18))
                     .path(getPath(request))
                     .entity();
         }
+        if ((ex.contains(InvalidFormatException.class))) {
+            if (ex.getLocalizedMessage().contains("CleaningStatus"))
+                return ErrorMessage.builder()
+                        .status(BAD_REQUEST)
+                        .message(linnes[0].substring(103))//cleaning status enum
+                        .path(getPath(request))
+                        .entity();
+
+            if (ex.getLocalizedMessage().contains("LocalDateTime"))
+                return ErrorMessage.builder()
+                        .status(BAD_REQUEST)
+                        .message("Date must not be provided")
+                        .path(getPath(request))
+                        .entity();
+        }
+
         return ErrorMessage.builder()
                 .status(status)
                 .message(linnes[0])
                 .path(getPath(request))
                 .entity();
-
     }
+
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     ResponseEntity<ErrorMessage> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {

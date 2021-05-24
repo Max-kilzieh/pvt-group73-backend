@@ -3,11 +3,13 @@ package com.pvt73.recycling.model.dao;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Embeddable

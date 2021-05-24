@@ -5,11 +5,11 @@ import com.pvt73.recycling.model.dao.User;
 public interface UserService {
     User creat(User user);
 
-    User findByID(String email);
+    User findByID(String id);
 
-    User update(User user, String email);
+    User update(User user, String id);
 
-    void delete(String email);
+    void delete(String userId);
 
 
 }
