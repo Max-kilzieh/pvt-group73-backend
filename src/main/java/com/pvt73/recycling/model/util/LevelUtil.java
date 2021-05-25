@@ -43,24 +43,26 @@ public class LevelUtil {
     public int getLevel(int placeCleaned, int eventParticipated, int litteredPlacesReported) {
 
         int level = (POINT_PER_LEVEL
-                + (placeCleaned * POINT_PER_LITTERED_PLACE_CLEANED
-                + litteredPlacesReported * POINT_PER_LITTERED_PLACE_REPORTED
-                + eventParticipated * POINT_PER_EVENT_PARTICIPATED))
+                + getTotalPoints(placeCleaned, eventParticipated, litteredPlacesReported))
                 / POINT_PER_LEVEL;
-
 
         return Math.min(level, HIGHEST_LEVEL);
     }
 
     public int getProgressPoints(int placeCleaned, int eventParticipated, int litteredPlacesReported) {
 
+        int level = getLevel(placeCleaned, eventParticipated, litteredPlacesReported);
+        if (level == 10)
+            return 0;
 
-        return (POINT_PER_LEVEL
-                + (placeCleaned * POINT_PER_LITTERED_PLACE_CLEANED
-                + litteredPlacesReported * POINT_PER_LITTERED_PLACE_REPORTED
-                + eventParticipated * POINT_PER_EVENT_PARTICIPATED))
+        return (getTotalPoints(placeCleaned, eventParticipated, litteredPlacesReported))
                 % POINT_PER_LEVEL;
     }
 
+    private int getTotalPoints(int placeCleaned, int eventParticipated, int litteredPlacesReported) {
+        return (placeCleaned * POINT_PER_LITTERED_PLACE_CLEANED
+                + litteredPlacesReported * POINT_PER_LITTERED_PLACE_REPORTED
+                + eventParticipated * POINT_PER_EVENT_PARTICIPATED);
+    }
 
 }
