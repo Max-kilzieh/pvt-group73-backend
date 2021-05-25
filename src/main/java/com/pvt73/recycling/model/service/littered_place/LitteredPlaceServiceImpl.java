@@ -32,7 +32,6 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
         newLitteredPlace.setEvent(false);
         newLitteredPlace.setCleanedBy(null);
         newLitteredPlace.setCleanedAt(null);
-
         newLitteredPlace.setCleaningStatus(CleaningStatus.NOT_CLEAN);
 
         return repository.save(newLitteredPlace);
@@ -53,8 +52,8 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
     }
 
     @Override
-    public List<LitteredPlace> findAllNearby(@NonNull LatLng coordinates, int offset, int limit) {
-        List<LitteredPlace> litteredPlaceList = repository.findAllByEventFalse();
+    public List<LitteredPlace> findAllNearbyCleaningStatus(@NonNull CleaningStatus status, @NonNull LatLng coordinates, int offset, int limit) {
+        List<LitteredPlace> litteredPlaceList = repository.findAllByEventFalseAndCleaningStatus(status);
 
         litteredPlaceList.removeIf(litteredPlace -> {
             LocalDateTime expireDate = litteredPlace.getCleanedAt();
@@ -83,8 +82,11 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
                     place.setCoordinates(newPlace.getCoordinates());
                     place.setAddress(newPlace.getAddress());
 
-                    deleteImageSetCompliment(place, newPlace);
-                    place.setImageSet(newPlace.getImageSet());
+                    deleteLitteredImageSetComplement(place, newPlace);
+                    place.setLitteredImageSet(newPlace.getLitteredImageSet());
+
+                    deleteCleanedImageSetComplement(place, newPlace);
+                    place.setCleanedImageSet(newPlace.getCleanedImageSet());
 
                     place.setDescription(newPlace.getDescription());
                     place.setUserId(newPlace.getUserId());
@@ -102,9 +104,15 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
                 });
     }
 
-    private void deleteImageSetCompliment(LitteredPlace place, LitteredPlace newPlace) {
-        Set<Image> toRemove = new HashSet<>(place.getImageSet());
-        toRemove.removeAll(newPlace.getImageSet());
+    private void deleteLitteredImageSetComplement(LitteredPlace place, LitteredPlace newPlace) {
+        Set<Image> toRemove = new HashSet<>(place.getLitteredImageSet());
+        toRemove.removeAll(newPlace.getLitteredImageSet());
+        imageService.deleteAll(toRemove);
+    }
+
+    private void deleteCleanedImageSetComplement(LitteredPlace place, LitteredPlace newPlace) {
+        Set<Image> toRemove = new HashSet<>(place.getCleanedImageSet());
+        toRemove.removeAll(newPlace.getCleanedImageSet());
         imageService.deleteAll(toRemove);
     }
 
@@ -123,18 +131,27 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
                     throw new ResourceNotFoundException("litteredPlaceId", litteredPlaceId, "littered place not found.");
                 });
 
-        imageService.deleteAll(litteredPlace.getImageSet());
+        imageService.deleteAll(litteredPlace.getLitteredImageSet());
+        imageService.deleteAll(litteredPlace.getCleanedImageSet());
+
         repository.delete(litteredPlace);
     }
 
 
     public Image addImage(int litteredPlaceId, MultipartFile file, boolean clean) {
+        Set<Image> imageSet = new HashSet<>();
         LitteredPlace litteredPlace = findByID(litteredPlaceId);
-        Set<Image> imageSet = litteredPlace.getImageSet();
         Image image = imageService.creat(file, clean);
         imageSet.add(image);
 
-        litteredPlace.setImageSet(imageSet);
+        if (clean) {
+            imageSet.addAll(litteredPlace.getCleanedImageSet());
+            litteredPlace.setCleanedImageSet(imageSet);
+        } else {
+            imageSet.addAll(litteredPlace.getLitteredImageSet());
+            litteredPlace.setLitteredImageSet(imageSet);
+        }
+
         repository.save(litteredPlace);
         return image;
     }
@@ -147,16 +164,26 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
 
         imageService.delete(imageId);
 
-        Set<Image> imageSet = litteredPlace.getImageSet();
-        imageSet.removeIf(image -> image.getId().equals(imageId));
-        litteredPlace.setImageSet(imageSet);
+        Set<Image> litteredImageSet = litteredPlace.getLitteredImageSet();
+        litteredImageSet.removeIf(image -> image.getId().equals(imageId));
+        litteredPlace.setLitteredImageSet(litteredImageSet);
+
+        Set<Image> cleanedImageSet = litteredPlace.getCleanedImageSet();
+        cleanedImageSet.removeIf(image -> image.getId().equals(imageId));
+        litteredPlace.setCleanedImageSet(cleanedImageSet);
+
         repository.save(litteredPlace);
     }
 
     public Image findImageById(int litteredPlaceId, @NonNull String imageId) {
         LitteredPlace litteredPlace = findByID(litteredPlaceId);
 
-        for (Image image : litteredPlace.getImageSet()) {
+        for (Image image : litteredPlace.getLitteredImageSet()) {
+            if (image.getId().equals(imageId))
+                return image;
+        }
+
+        for (Image image : litteredPlace.getCleanedImageSet()) {
             if (image.getId().equals(imageId))
                 return image;
         }
@@ -166,7 +193,13 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
 
 
     public Set<Image> findAllImage(int litteredPlaceId) {
-        return repository.findById(litteredPlaceId).map(LitteredPlace::getImageSet)
+        return repository.findById(litteredPlaceId)
+                .map(litteredPlace -> {
+                    Set<Image> imageSet = new HashSet<>();
+                    imageSet.addAll(litteredPlace.getCleanedImageSet());
+                    imageSet.addAll(litteredPlace.getLitteredImageSet());
+                    return imageSet;
+                })
                 .orElseThrow(() -> {
                     throw new ResourceNotFoundException("id", litteredPlaceId, "littered place not found.");
                 });
@@ -178,6 +211,11 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
 
     public int countCleanedBy(String userId) {
         return repository.countAllByCleanedByEquals(userId);
+    }
+
+    @Override
+    public int countReportedBy(String userId) {
+        return repository.countAllByUserIdEquals(userId);
     }
 
 

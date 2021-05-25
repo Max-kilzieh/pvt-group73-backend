@@ -1,5 +1,6 @@
 package com.pvt73.recycling.model.service.littered_place;
 
+import com.pvt73.recycling.model.dao.CleaningStatus;
 import com.pvt73.recycling.model.dao.Image;
 import com.pvt73.recycling.model.dao.LatLng;
 import com.pvt73.recycling.model.dao.LitteredPlace;
@@ -13,13 +14,15 @@ public interface LitteredPlaceService {
 
     LitteredPlace findById(int id, LatLng currentCoordinates);
 
-    List<LitteredPlace> findAllNearby(LatLng coordinates, int offset, int limit);
+    List<LitteredPlace> findAllNearbyCleaningStatus(CleaningStatus status, LatLng coordinates, int offset, int limit);
 
     LitteredPlace update(LitteredPlace litteredPlace, int litteredPlaceId);
 
     void delete(int litteredPlaceId);
 
     int countCleanedBy(String userId);
+
+    int countReportedBy(String userId);
 
     Image addImage(int litteredPlaceId, MultipartFile file, boolean clean);
 

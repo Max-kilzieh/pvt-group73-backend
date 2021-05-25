@@ -40,7 +40,7 @@ public class DistanceAndPagingUtil {
 
     public int[] calculatePageAndSize(int offset, int limit, int maxOffset) {
 
-        if (offset < 0 || limit < 1 || maxOffset < 1)
+        if (offset < 0 || limit < 1 || maxOffset < 0)
             throw new IllegalArgumentException();
 
         int from = offset * limit;

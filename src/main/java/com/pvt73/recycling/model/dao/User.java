@@ -37,10 +37,14 @@ public class User {
 
     @Setter(AccessLevel.NONE)
     private int level;
+    private int points;
+
     @Setter(AccessLevel.NONE)
     private int placesCleaned;
     @Setter(AccessLevel.NONE)
     private int eventParticipated;
+    @Setter(AccessLevel.NONE)
+    private int litteredPlacesReported;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> recentActivities;
@@ -54,10 +58,13 @@ public class User {
         this.info = info;
     }
 
-    public void setLevel(int placesCleaned, int eventParticipated) {
+    public void setLevel(int placesCleaned, int eventParticipated, int litteredPlacesReported) {
+        this.litteredPlacesReported = litteredPlacesReported;
         this.placesCleaned = placesCleaned;
         this.eventParticipated = eventParticipated;
-        this.level = LevelUtil.getLevel(this.placesCleaned, this.eventParticipated);
+
+        this.level = LevelUtil.getLevel(placesCleaned, eventParticipated, litteredPlacesReported);
+        this.points = LevelUtil.getProgressPoints(placesCleaned, eventParticipated, litteredPlacesReported);
     }
 
 }

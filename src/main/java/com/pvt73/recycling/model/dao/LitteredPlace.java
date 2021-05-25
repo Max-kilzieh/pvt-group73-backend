@@ -42,7 +42,9 @@ public class LitteredPlace {
 
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Image> imageSet = new HashSet<>();
+    private Set<Image> litteredImageSet = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Image> cleanedImageSet = new HashSet<>();
 
     private boolean event;
     private String description;
@@ -55,12 +57,21 @@ public class LitteredPlace {
     }
 
     public boolean containImage(String imageId) {
-        for (Image image : imageSet) {
+
+        for (Image image : litteredImageSet) {
             if (image.getId().equals(imageId))
                 return true;
         }
+
+        for (Image image : cleanedImageSet) {
+            if (image.getId().equals(imageId)) {
+                return true;
+            }
+        }
+
         return false;
     }
+
 
     public void setCleaningStatus(CleaningStatus status) {
         if (status == CleaningStatus.CLEAN)

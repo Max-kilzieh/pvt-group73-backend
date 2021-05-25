@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
         return repository.findById(id)
                 .map(user -> {
                     user.setLevel(litteredPlaceService.countCleanedBy(id),
-                            eventService.countByEventParticipated(id));
+                            eventService.countByEventParticipated(id),
+                            litteredPlaceService.countReportedBy(id));
 
                     return repository.save(user);
                 })

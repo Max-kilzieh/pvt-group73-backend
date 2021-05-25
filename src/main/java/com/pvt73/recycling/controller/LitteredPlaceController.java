@@ -62,22 +62,23 @@ public class LitteredPlaceController {
         return service.findById(id, new LatLng(latlng[0], latlng[1]));
     }
 
-    @Operation(summary = "All littered places")
+    @Operation(summary = "All nearby littered places by cleaning status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "A list containing littered places returned", content = @Content(schema = @Schema(implementation = LitteredPlace.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "204", description = "No more littered places nearby were found.", content = @Content)})
 
     @GetMapping(value = "/littered-places")
-    ResponseEntity<List<LitteredPlace>> findAllNearby(@Parameter(description = "latitude,longitude")
-                                                      @RequestParam @Size(min = 2, max = 2) double[] latlng,
-                                                      @Parameter(description = "The index of the first result to return.")
-                                                      @RequestParam(defaultValue = "0") @Min(OFFSET_MIN) int offset,
-                                                      @Parameter(description = "Maximum number of results to return. " +
-                                                              "Use with limit to get the next page of search results.")
-                                                      @RequestParam(defaultValue = "10") @Min(LIMIT_MIN) int limit) {
+    ResponseEntity<List<LitteredPlace>> findAllNearbyCleaningStatus(@RequestParam CleaningStatus status,
+                                                                    @Parameter(description = "latitude,longitude")
+                                                                    @RequestParam @Size(min = 2, max = 2) double[] latlng,
+                                                                    @Parameter(description = "The index of the first result to return.")
+                                                                    @RequestParam(defaultValue = "0") @Min(OFFSET_MIN) int offset,
+                                                                    @Parameter(description = "Maximum number of results to return. " +
+                                                                            "Use with limit to get the next page of search results.")
+                                                                    @RequestParam(defaultValue = "10") @Min(LIMIT_MIN) int limit) {
 
 
-        List<LitteredPlace> litteredPlaceList = service.findAllNearby(new LatLng(latlng[0], latlng[1]), offset, limit);
+        List<LitteredPlace> litteredPlaceList = service.findAllNearbyCleaningStatus(status, new LatLng(latlng[0], latlng[1]), offset, limit);
 
         return litteredPlaceList.isEmpty() ?
                 new ResponseEntity<>(HttpStatus.NO_CONTENT) :
