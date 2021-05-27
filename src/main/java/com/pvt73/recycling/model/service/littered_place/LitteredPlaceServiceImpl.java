@@ -1,5 +1,6 @@
 package com.pvt73.recycling.model.service.littered_place;
 
+import com.pvt73.recycling.exception.ResourceAlreadyExistException;
 import com.pvt73.recycling.exception.ResourceNotFoundException;
 import com.pvt73.recycling.model.dao.CleaningStatus;
 import com.pvt73.recycling.model.dao.Image;
@@ -29,6 +30,9 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
 
     @Override
     public LitteredPlace creat(@NonNull LitteredPlace newLitteredPlace) {
+        if (repository.existsByCoordinatesAndCleaningStatusIsNot(newLitteredPlace.getCoordinates(), CleaningStatus.CLEAN))
+            throw new ResourceAlreadyExistException("latlng", newLitteredPlace.getCoordinates(), "littered place already exist");
+
         newLitteredPlace.setEvent(false);
         newLitteredPlace.setCleanedBy(null);
         newLitteredPlace.setCleanedAt(null);

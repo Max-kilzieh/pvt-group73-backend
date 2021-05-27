@@ -37,4 +37,9 @@ public class LatLng implements Serializable {
     public int hashCode() {
         return Objects.hash(getLatitude(), getLongitude());
     }
+
+    @Override
+    public String toString() {
+        return latitude + "," + longitude;
+    }
 }

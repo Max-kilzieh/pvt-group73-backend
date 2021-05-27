@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class LitteredPlace {
     @Transient
     private double distance;
     private String address;
+    @NotNull
     private LatLng coordinates;
 
 

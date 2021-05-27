@@ -97,7 +97,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(ResponseStatusException.class)
     ResponseEntity<?> handleStatusException(ResponseStatusException ex, WebRequest request) {
-        logger.warn(ex.getReason(), ex);
+        logger.warn(ex.getReason());
         return handleResponseStatusException(ex, request);
     }
 
