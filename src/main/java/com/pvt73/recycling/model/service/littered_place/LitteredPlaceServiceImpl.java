@@ -30,8 +30,14 @@ public class LitteredPlaceServiceImpl implements LitteredPlaceService {
 
     @Override
     public LitteredPlace creat(@NonNull LitteredPlace newLitteredPlace) {
+
         if (repository.existsByCoordinatesAndCleaningStatusIsNot(newLitteredPlace.getCoordinates(), CleaningStatus.CLEAN))
             throw new ResourceAlreadyExistException("latlng", newLitteredPlace.getCoordinates(), "littered place already exist");
+
+
+        LitteredPlace place = repository.findByCoordinatesAndCleaningStatusIs(newLitteredPlace.getCoordinates(), CleaningStatus.CLEAN);
+        if (place != null)
+            repository.delete(place);
 
         newLitteredPlace.setEvent(false);
         newLitteredPlace.setCleanedBy(null);
