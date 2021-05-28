@@ -67,4 +67,18 @@ public class User {
         this.points = LevelUtil.getProgressPoints(placesCleaned, eventParticipated, litteredPlacesReported);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }
