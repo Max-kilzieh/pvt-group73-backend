@@ -167,13 +167,13 @@ public class LitteredPlaceController {
             @ApiResponse(responseCode = "200", description = "Image set returned"),
             @ApiResponse(responseCode = "404", description = "not image found.", content = @Content(schema = @Schema(implementation = ErrorMessage.class), mediaType = MediaType.APPLICATION_JSON_VALUE))})
 
-    @GetMapping(value = "/littered-places/{place-id}/images/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/littered-places/{place-id}/images", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Set<Image>> findAllImage(@PathVariable("place-id") int id) {
 
         Set<Image> imageSet = service.findAllImage(id);
 
         if (imageSet.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, " no images found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no images found");
         else
             return ResponseEntity.ok(imageSet);
 

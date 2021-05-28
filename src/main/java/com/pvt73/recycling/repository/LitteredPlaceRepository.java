@@ -11,9 +11,7 @@ public interface LitteredPlaceRepository extends CrudRepository<LitteredPlace, I
 
     List<LitteredPlace> findAllByEventFalseAndCleaningStatus(CleaningStatus status);
 
-
     boolean existsByCoordinatesAndCleaningStatusIsNot(LatLng coordinates, CleaningStatus status);
-
 
     LitteredPlace findByCoordinatesAndCleaningStatusIs(LatLng coordinates, CleaningStatus status);
 

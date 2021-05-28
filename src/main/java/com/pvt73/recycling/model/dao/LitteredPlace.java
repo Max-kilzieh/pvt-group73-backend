@@ -1,5 +1,7 @@
 package com.pvt73.recycling.model.dao;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +34,7 @@ public class LitteredPlace {
 
 
     private CleaningStatus cleaningStatus;
-
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime cleanedAt;
     private String cleanedBy;
 
@@ -82,5 +84,18 @@ public class LitteredPlace {
         this.cleaningStatus = status;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LitteredPlace)) return false;
 
+        LitteredPlace that = (LitteredPlace) o;
+
+        return getCoordinates().equals(that.getCoordinates());
+    }
+
+    @Override
+    public int hashCode() {
+        return getCoordinates().hashCode();
+    }
 }
