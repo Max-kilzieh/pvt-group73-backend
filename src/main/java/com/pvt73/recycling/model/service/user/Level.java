@@ -1,6 +1,6 @@
-package com.pvt73.recycling.model.util;
+package com.pvt73.recycling.model.service.user;
 
-import lombok.experimental.UtilityClass;
+import org.springframework.stereotype.Component;
 
 /**
  * Level 1 - Nystädare
@@ -29,15 +29,11 @@ import lombok.experimental.UtilityClass;
  * <p>     25 xp / städad plats
  * <p>     50 xp / städevent
  */
-@UtilityClass
-public class LevelUtil {
 
-    private final int POINT_PER_LITTERED_PLACE_CLEANED = 25;
-    private final int POINT_PER_LITTERED_PLACE_REPORTED = 5;
-    private final int POINT_PER_EVENT_PARTICIPATED = 50;
+@Component
+public class Level {
 
     private final int POINT_PER_LEVEL = 100;
-    private final int HIGHEST_LEVEL = 10;
 
 
     public int getLevel(int placeCleaned, int eventParticipated, int litteredPlacesReported) {
@@ -46,6 +42,7 @@ public class LevelUtil {
                 + getTotalPoints(placeCleaned, eventParticipated, litteredPlacesReported))
                 / POINT_PER_LEVEL;
 
+        int HIGHEST_LEVEL = 10;
         return Math.min(level, HIGHEST_LEVEL);
     }
 
@@ -60,6 +57,9 @@ public class LevelUtil {
     }
 
     private int getTotalPoints(int placeCleaned, int eventParticipated, int litteredPlacesReported) {
+        int POINT_PER_LITTERED_PLACE_CLEANED = 25;
+        int POINT_PER_LITTERED_PLACE_REPORTED = 5;
+        int POINT_PER_EVENT_PARTICIPATED = 50;
         return (placeCleaned * POINT_PER_LITTERED_PLACE_CLEANED
                 + litteredPlacesReported * POINT_PER_LITTERED_PLACE_REPORTED
                 + eventParticipated * POINT_PER_EVENT_PARTICIPATED);

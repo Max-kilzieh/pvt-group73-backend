@@ -1,6 +1,5 @@
 package com.pvt73.recycling.model.dao;
 
-import com.pvt73.recycling.model.util.LevelUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,13 +57,13 @@ public class User {
         this.info = info;
     }
 
-    public void setLevel(int placesCleaned, int eventParticipated, int litteredPlacesReported) {
+    public void setStatistic(int placesCleaned, int eventParticipated, int litteredPlacesReported, int level, int points) {
         this.litteredPlacesReported = litteredPlacesReported;
         this.placesCleaned = placesCleaned;
         this.eventParticipated = eventParticipated;
 
-        this.level = LevelUtil.getLevel(placesCleaned, eventParticipated, litteredPlacesReported);
-        this.points = LevelUtil.getProgressPoints(placesCleaned, eventParticipated, litteredPlacesReported);
+        this.level = level;
+        this.points = points;
     }
 
     @Override

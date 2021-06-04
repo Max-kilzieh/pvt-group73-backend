@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final LitteredPlaceService litteredPlaceService;
     private final EventService eventService;
+    private final Level level;
 
     @Override
     public User creat(@NonNull User newUser) {
@@ -31,9 +32,13 @@ public class UserServiceImpl implements UserService {
 
         return repository.findById(id)
                 .map(user -> {
-                    user.setLevel(litteredPlaceService.countCleanedBy(id),
-                            eventService.countByEventParticipated(id),
-                            litteredPlaceService.countReportedBy(id));
+                    int placesCleaned = litteredPlaceService.countCleanedBy(id);
+                    int eventParticipated = eventService.countByEventParticipated(id);
+                    int placesReported = litteredPlaceService.countReportedBy(id);
+
+                    user.setStatistic(placesCleaned, eventParticipated, placesReported,
+                            level.getLevel(placesCleaned, eventParticipated, placesReported),
+                            level.getProgressPoints(placesCleaned, eventParticipated, placesReported));
 
                     return repository.save(user);
                 })
@@ -59,8 +64,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(@NonNull String userId) {
-
-
         repository.deleteById(userId);
     }
 }

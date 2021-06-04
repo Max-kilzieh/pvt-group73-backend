@@ -26,7 +26,6 @@ public class AddressController {
     private final AddressService service;
 
     @Operation(summary = "Obtain adress from Gps coordinates.")
-
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Address.class), mediaType = MediaType.APPLICATION_JSON_VALUE))
 
     @GetMapping("/addresses")

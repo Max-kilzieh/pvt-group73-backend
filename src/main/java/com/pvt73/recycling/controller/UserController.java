@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Tag(name = "Users", description = "Completely unsecure user controller!")
+@Tag(name = "Users")
 @RequiredArgsConstructor
 @RestController
 public class UserController {
