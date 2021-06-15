@@ -26,15 +26,15 @@ public class Config {
 
     @Bean
     public Cloudinary cloudinaryApi() {
-        return new Cloudinary(ObjectUtils.asMap("cloud_name", "pvt73",
-                "api_key", "528765818657637",
-                "api_secret", "lYOtY0RsH-OdnG4z1kBVcjyfmjs"));
+        return new Cloudinary(ObjectUtils.asMap("cloud_name", "your cloud name",
+                "api_key", "your api key",
+                "api_secret", "your api secret"));
     }
 
     @Bean
     public GeoApiContext googleGeocodingApi() {
         return new GeoApiContext.Builder()
-                .apiKey("AIzaSyB7qOZSBJKVakHWVwknSHVt8H9dY6ogUA4")
+                .apiKey("your api key")
                 .build();
 
     }
