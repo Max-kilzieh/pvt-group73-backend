@@ -3,6 +3,7 @@
 ____
 
 Please edit `Config.java` and provide your API keys for both  `Google and Cloudinary APIs`
+
 Please edit `application.properties` and provide the database url, username and password
 
 ____
